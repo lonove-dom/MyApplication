@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.example.note.justdo"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    //初始动画文字变换工具
+    def htextview_version = "0.1.6"
+    implementation "com.hanks:htextview-base:$htextview_version"        // base library
+    implementation "com.hanks:htextview-fade:$htextview_version"        // optional
+    implementation "com.hanks:htextview-scale:$htextview_version"       // optional
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //3D地图so及jar
+    implementation 'com.amap.api:3dmap:6.4.1'
+    //定位功能
+   implementation 'com.amap.api:location:latest.integration'
+    //搜索功能
+   implementation 'com.amap.api:search:6.1.0'
+
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'com.evernote:android-job:1.2.6'
+    implementation 'com.weigan:loopView:0.1.2'
+    implementation 'com.contrarywind:wheelview:4.0.5'
+    implementation 'com.necer.ncalendar:ncalendar:2.4.6'
+    implementation 'com.contrarywind:Android-PickerView:4.1.3'
+    implementation 'com.android.support:design:27.1.0'
+    // add library
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.google.code.gson:gson:2.2.4'
+}

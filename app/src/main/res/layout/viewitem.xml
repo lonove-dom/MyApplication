@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="260dp">
+
+
+    <Button
+        android:id="@+id/tbutton"
+        android:layout_width="100dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/tedit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="168dp"
+        android:gravity="center_horizontal"
+        android:imeOptions="actionDone"
+        android:theme="@style/MyEditText"
+        android:singleLine="false"
+        app:layout_constraintEnd_toEndOf="@+id/tbutton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tbutton"
+        app:layout_constraintTop_toTopOf="@+id/tbutton" />
+
+    <Button
+        android:id="@+id/detbutton"
+        android:layout_width="18dp"
+        android:layout_height="17dp"
+        android:background="@drawable/ic_close_circular_button_of_a_cross"
+        app:layout_constraintRight_toLeftOf="@id/tbutton"
+        app:layout_constraintTop_toTopOf="@id/tbutton"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="7dp" />
+
+
+</android.support.constraint.ConstraintLayout>
