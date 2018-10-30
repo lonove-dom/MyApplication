@@ -4,6 +4,7 @@ public class Update {
     public void update(){
         // 2018.10.25  从地图返回时修改全局变量
         // 2018.10.29  bug修改，icon制作
+        // 同步到github，可以实现多地办公
     }
 
     public void bug(){
