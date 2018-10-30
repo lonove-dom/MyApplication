@@ -1,19 +1,11 @@
 package com.example.note.justdo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.note.justdo.Amap.NewMap;
-import com.hanks.htextview.base.AnimationListener;
-import com.hanks.htextview.base.HTextView;
-import com.hanks.htextview.fade.FadeTextView;
 import com.hanks.htextview.scale.ScaleTextView;
 
 public class WelcomeActivity extends Activity {
@@ -24,6 +16,11 @@ public class WelcomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.animation_start);
         textView = findViewById(R.id.less);
+        SharedPreferences sp = getSharedPreferences("firstIn",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        final boolean isFirst = sp.getBoolean("isFirst",true);
+        //判断得到的是否为第一次 若 是 第一次  则跳到引导页面
        // textView1 = (ScaleTextView) findViewById(R.id.just);
         // textView2 = (ScaleTextView) findViewById(R.id.textview2);
         // textView3 = (ScaleTextView) findViewById(R.id.textview3);
@@ -53,6 +50,9 @@ public class WelcomeActivity extends Activity {
             //延迟中执行的操作放在这里,跳转之后及时销毁
             @Override
             public void run() {
+                if(isFirst){
+
+                }
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

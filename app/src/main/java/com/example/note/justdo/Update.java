@@ -4,7 +4,7 @@ public class Update {
     public void update(){
         // 2018.10.25  从地图返回时修改全局变量
         // 2018.10.29  bug修改，icon制作
-        // 同步到github，可以实现多地办公
+        // 2018.10.30  同步到github，可以实现多地办公
     }
 
     public void bug(){
@@ -15,7 +15,6 @@ public class Update {
         // -----圆的可见度获取问题，无圆时也会弹出窗口---2018.10.29
         // -----搜索后多marker的情况下无法识别标题和位置导致空指针闪退---2018.10.29
         // 定位按钮没有边框，不好看
-        // 我觉得蛮好看的
     }
 
     public void todo(){
