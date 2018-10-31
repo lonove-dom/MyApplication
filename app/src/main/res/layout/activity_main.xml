@@ -80,7 +80,7 @@
             android:gravity="center_vertical"
             android:text="@string/deletestring"
             android:textColor="#000000"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <Button
             android:drawableLeft="@drawable/ic_previous"
@@ -93,7 +93,7 @@
             android:gravity="center_vertical"
             android:text="@string/deletebackstring"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:drawablePadding="5dp"/>
     </LinearLayout>
 

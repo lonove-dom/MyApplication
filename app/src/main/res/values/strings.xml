@@ -2,5 +2,9 @@
     <string name="no_result">对不起，没有搜索到相关数据！</string>
     <string name="deletestring">即将永久删除...</string>
     <string name="deletebackstring">撤销删除</string>
-    <string name="lala">123</string>
+    <string name="nightModeOn">已开启</string>
+    <string name="nightModeOff">已关闭</string>
+    <string name="choose_language">语言选择</string>
+    <string name="key_choose_language">语言选择</string>
+    <string name="key_choose_textsize">字体大小</string>
 </resources>

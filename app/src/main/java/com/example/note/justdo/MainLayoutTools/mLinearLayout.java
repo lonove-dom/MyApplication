@@ -57,7 +57,6 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
     private EditText editText;//嵌套于editll内，两者等大
     private LinearLayout editll;
     mRecyclerview mlistrecyclerview;
-
     //用于实现软键盘手动收弹操作
     InputMethodManager im;
 

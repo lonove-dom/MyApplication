@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    android:title="PreferenceScreen">
+    <PreferenceCategory
+        android:key="key_prerence"
+        android:summary="Preference Categories Summary"
+        android:title="主要设置">
+        <SwitchPreference
+            android:key="key_cloud"
+            android:title="多设备同步"
+            android:enabled="false"/>
+        <ListPreference
+            android:key="key_textSize"
+            android:title="@string/key_choose_textsize"
+            android:dialogTitle="@string/key_choose_textsize"
+            android:entries="@array/textSize_entry"
+            android:entryValues="@array/textSize_entry_value"
+            android:defaultValue="0"/>
+        <ListPreference
+            android:key="key_language"
+            android:title="@string/key_choose_language"
+            android:dialogTitle="@string/key_choose_language"
+            android:entries="@array/language_key"
+            android:entryValues="@array/language_value"
+            android:defaultValue="简体中文"
+            />
+        <SwitchPreference
+            android:key="key_nightMode"
+            android:title="夜间模式"
+            android:summaryOn="@string/nightModeOn"
+            android:summaryOff="@string/nightModeOff"
+            android:clickable="true"/>
+        <Preference
+            android:title="联系我们"
+            android:key="key_connect">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.baidu.com"/>
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>
