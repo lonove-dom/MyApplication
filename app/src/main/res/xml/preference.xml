@@ -4,7 +4,8 @@
     <PreferenceCategory
         android:key="key_prerence"
         android:summary="Preference Categories Summary"
-        android:title="主要设置">
+        android:title="主要设置"
+        >
         <SwitchPreference
             android:key="key_cloud"
             android:title="多设备同步"

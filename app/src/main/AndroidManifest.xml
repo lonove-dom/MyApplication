@@ -33,7 +33,7 @@
             android:value="90df0c765aea761fa85a8cbac73be4f7" />
 
         <activity
-            android:name="com.example.note.justdo.settingsActivity"
+            android:name="com.example.note.justdo.WelcomeActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
@@ -51,8 +51,11 @@
             android:name="com.example.note.justdo.Amap.NewMap"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.example.note.justdo.WelcomeActivity"
-            android:screenOrientation="portrait"/>
+            android:name="com.example.note.justdo.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity
             android:name="com.example.note.justdo.TActivity"
             android:theme="@style/AppTheme"
@@ -60,12 +63,27 @@
             android:screenOrientation="portrait">
             ></activity>
         <activity
-            android:name="com.example.note.justdo.MainActivity"
+            android:name="com.example.note.justdo.settingsActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
             ></activity>
-
+        <!--MyRemoteService-->
+        <service
+            android:name=".Widget.WidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
+        <receiver android:name=".Widget.WidgetProvider">
+            ...
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.seewo.homewidgets.action.CLICK" />
+            </intent-filter>
+        </receiver>
      <!--   <activity android:name=".ScrollActivity">
         </activity>!-->
     </application>
