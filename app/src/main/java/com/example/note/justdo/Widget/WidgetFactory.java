@@ -12,6 +12,7 @@ import com.example.note.justdo.Event;
 import com.example.note.justdo.Eventdaomanger;
 import com.example.note.justdo.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -19,8 +20,7 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context mContext;
     private int mAppWidgetId;
 
-    private static List<Event> mEvents;
-
+     static List<Event> mEvents=new ArrayList<Event>();
     /**
      * 构造GridRemoteViewsFactory
      */
@@ -58,6 +58,10 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 //        unlockIntent.putExtra("Type", 2);
 //        unlockIntent.putExtra(ListWidgetProvider.COLLECTION_VIEW_EXTRA, position);
 //        rv.setOnClickFillInIntent(R.id.iv_unlock, unlockIntent);
+        Intent fillInIntent = new Intent();
+       // fillInIntent.putExtra("Type", 0);
+        fillInIntent.putExtra(WidgetProvider.LISTVIEW_POSITION, position);
+        rv.setOnClickFillInIntent(R.id.textView, fillInIntent);
         return rv;
     }
 
@@ -66,15 +70,16 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
      * 初始化ListView的数据
      */
     private void initData() {
-        mEvents=new Eventdaomanger(mContext).getfinalEventlist(1);
-    }
-
-    private static int i;
-
-//    public static void refresh() {
-//        i++;
-//        mDevices.add(new Device("Refresh" + i, 1));
-//    }
+        int i;
+     List<Event> original=new Eventdaomanger(mContext).getfinalEventlist(1);
+        for(i=0;i<original.size();i++) {
+            if(!original.get(i).getIsLinearShow()){
+                mEvents.add(original.get(i));
+            }
+        }
+    //    mEvents=new Eventdaomanger(mContext).getfinalEventlist(1);
+      //  Log.d("TAG","第0个数据"+mEvents.get(0).getContext());
+        }
 
     @Override
     public void onCreate() {
@@ -112,6 +117,14 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
+        mEvents.clear();
+        int i;
+        List<Event> original=new Eventdaomanger(mContext).getfinalEventlist(1);
+        for(i=0;i<original.size();i++) {
+            if(!original.get(i).getIsLinearShow()){
+                mEvents.add(original.get(i));
+            }
+        }
     }
 
     @Override

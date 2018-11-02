@@ -20,7 +20,7 @@
             android:background="@drawable/icon2"/>
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/wg_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -33,7 +33,7 @@
         android:id="@+id/wg_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66a8a8a8"
+        android:background="#bfa8a8a8"
         android:columnWidth="80dip"
         android:gravity="center"
         android:horizontalSpacing="4dip"
@@ -43,4 +43,12 @@
         android:divider="@null"
         android:fadeScrollbars="true"/>
 
+    <TextView
+        android:id="@+id/wg_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#bfa8a8a8"
+        android:text="@string/wg_empty"
+        android:visibility="visible" />
 </LinearLayout>

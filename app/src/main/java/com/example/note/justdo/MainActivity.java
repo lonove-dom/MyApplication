@@ -1,5 +1,6 @@
 package com.example.note.justdo;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,13 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,11 +51,12 @@ import com.example.note.justdo.TimeReminder.TimeManger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimerTask;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG;
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     //获取数据库
     Eventdaomanger eventdaomanger = getApp().getEventdaomanger();
     DaoSession daoSession = eventdaomanger.getDaoSession();
@@ -90,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener onClickListener;//撤销删除按钮的监听
     boolean lastdeal;//上次撤销完成是否处理完成
     boolean allowdelete;//是否允许删除
+
+    //摇一摇监听
+    private SensorManager sensorManager;
+    private Vibrator vibrator;
+    private static final int UPTATE_INTERVAL_TIME = 50;
+    private static final int SPEED_SHRESHOLD = 30;//这个值调节灵敏度
+    private long lastUpdateTime;
+    private float lastX;
+    private float lastY;
+    private float lastZ;
+    private Sensor sensor;
+
+    private static final String TAG = "TestSensorActivity";
+    private static final int SENSOR_SHAKE = 10;
+    long time = System.currentTimeMillis();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,12 +230,31 @@ public class MainActivity extends AppCompatActivity {
                 },200);
             }
         });
+
+        //摇一摇
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         listrecyclerAdapter.notifyDataSetChanged();
+        if (sensorManager != null) {
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+        if (sensor != null) {
+            sensorManager.registerListener(sensorEventListener,
+                    sensor,
+                    SensorManager.SENSOR_DELAY_GAME);//这里选择感应频率
+        }
+    }
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        if (sensorManager != null) {// 取消监听器
+            sensorManager.unregisterListener(sensorEventListener);
+        }
     }
 
     @Override
@@ -876,10 +918,103 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+//监听器
+    /**
+     * 重力感应监听
+     */
+//
+//    TimerTask task = new TimerTask() {
+//        public void run() {
+//            vibrator.vibrate(300);
+//            Log.i(TAG, "检测到摇晃，执行操作！");
+//            //每次需要执行的代码放到这里面。
+//        }
+//    };
+
+    private SensorEventListener sensorEventListener = new SensorEventListener() {
 
 
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            long currentUpdateTime = System.currentTimeMillis();
+            long timeInterval = currentUpdateTime - lastUpdateTime;
+            if (timeInterval < UPTATE_INTERVAL_TIME) {
+                return;
+            }
+            lastUpdateTime = currentUpdateTime;
+            long nTime=System.currentTimeMillis();
+// 传感器信息改变时执行该方法
+            float[] values = event.values;
+            float x = values[0]; // x轴方向的重力加速度，向右为正
+            float y = values[1]; // y轴方向的重力加速度，向前为正
+            float z = values[2]; // z轴方向的重力加速度，向上为正
+            float deltaX = x - lastX;
+            float deltaY = y - lastY;
+            float deltaZ = z - lastZ;
 
 
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+            double speed = (Math.sqrt(deltaX * deltaX + deltaY * deltaY
+                    + deltaZ * deltaZ) / timeInterval) * 100;
+            if (speed >= SPEED_SHRESHOLD&&nTime-time>1000) {
+                vibrator.vibrate(300);
+                Log.i(TAG, "检测到摇晃，执行操作！");
+                time=nTime;
+            }
+        }
 
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
 }
+//           // Log.i(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
+//            // 一般在这三个方向的重力加速度达到40就达到了摇晃手机的状态。
+//            int medumValue = 19;// 三星 i9250怎么晃都不会超过20，没办法，只设置19了
+//            if (Math.abs(x) > medumValue || Math.abs(y) > medumValue || Math.abs(z) > medumValue) {
+//                Log.i(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
+//                vibrator.vibrate(200);
+//                Message msg = new Message();
+//                msg.what = SENSOR_SHAKE;
+//                handler.sendMessage(msg);
+//            }
+//        }
+//
+//        @Override
+//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//        }
+//    };
+//
+//    /**
+//     * 动作执行
+//     */
+//    @SuppressLint("HandlerLeak")
+//    Handler handler = new Handler() {
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            switch (msg.what) {
+//                case SENSOR_SHAKE:
+//                    Toast.makeText(MainActivity.this, "检测到摇晃，执行操作！", Toast.LENGTH_SHORT).show();
+//                    Log.i(TAG, "检测到摇晃，执行操作！");
+//                    break;
+//            }
+//        }
+//
+//    };
+
+
+
+
+
+
+
+
+
