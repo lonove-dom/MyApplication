@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -134,13 +133,15 @@ public class WidgetProvider extends AppWidgetProvider {
 //
 //        } else
         if (action.equals(CLICK_ACTION)) {
+            //取消时间提醒！
             int poi=intent.getIntExtra(LISTVIEW_POSITION,0);
             Log.d("TAG","wg_list被点击了"+poi);
             final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             final ComponentName cn = new ComponentName(context,
                     WidgetProvider.class);
-            //Eventdaomanger manger=new Eventdaomanger(context);
-           WidgetFactory.mEvents.get(poi).setIsLinearShow(true);
+            Eventdaomanger manger=new Eventdaomanger(context);
+          int finalposition =WidgetFactory.mEvents.size()-1;
+          manger.updateSwapedevents(1,poi,finalposition,true);
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn),
                     R.id.wg_listview);
 
