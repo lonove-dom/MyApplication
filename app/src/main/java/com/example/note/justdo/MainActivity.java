@@ -286,6 +286,9 @@ public class MainActivity extends AppCompatActivity  {
             }
         } else {
             Event newev = new Event(addedit.getText().toString(), getApp().getListid(), getApp().getListtitle());
+
+            if(getApp().getRadius()!=0){
+            }
             //时间提醒设置
             if (Cstartmills > 0) {
                 newev.setStartmills(Cstartmills);

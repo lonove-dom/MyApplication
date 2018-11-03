@@ -842,12 +842,12 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
     public void removefinishedevents(){
-        if(eventsnum!=getItemCount()-1){
+        if(eventsnum!=getItemCount()){
            final int finalpos=getItemCount();
             for(int i=getItemCount()-1;i>=eventsnum;i--){
                 mEvent.remove(i);
             }
-            notifyItemRangeChanged(eventsnum-1,finalpos-eventsnum);
+            notifyItemRangeChanged(eventsnum,finalpos-eventsnum+1);
         }
         }
 }
