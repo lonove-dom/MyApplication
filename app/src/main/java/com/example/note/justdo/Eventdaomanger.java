@@ -6,7 +6,6 @@ import android.util.Log;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +85,9 @@ public class Eventdaomanger {
             }
         }
         return false;
+    }
+    public void insertevent(Event event){
+        daoSession.getEventDao().insert(event);
     }
     public List<Event> getfinalEventlist(int listid){
         DaoMaster daoMaster = new DaoMaster(getReadableDatabase());

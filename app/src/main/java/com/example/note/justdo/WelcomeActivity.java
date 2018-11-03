@@ -51,6 +51,19 @@ public class WelcomeActivity extends Activity {
             @Override
             public void run() {
                 if(isFirst){
+                  Event firstevent=new Event();
+                  firstevent.setListid(1);
+                  firstevent.setContext("1");
+                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
+                    firstevent.setContext("2");
+                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
+                    firstevent.setContext("3");
+                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
+                    firstevent.setContext("4");
+                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
+                    firstevent.setContext("5");
+                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
+
 
                 }
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);

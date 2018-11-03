@@ -1,7 +1,5 @@
 package com.example.note.justdo;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,12 +12,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -40,7 +37,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.note.justdo.Amap.InputTipsActivity;
 import com.example.note.justdo.Amap.NewMap;
 import com.example.note.justdo.MainLayoutTools.listrecyclerAdapter;
 import com.example.note.justdo.MainLayoutTools.mLinearLayout;
@@ -51,7 +47,6 @@ import com.example.note.justdo.TimeReminder.TimeManger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimerTask;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG;
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
@@ -961,6 +956,7 @@ public class MainActivity extends AppCompatActivity  {
             if (speed >= SPEED_SHRESHOLD&&nTime-time>1000) {
                 vibrator.vibrate(300);
                 Log.i(TAG, "检测到摇晃，执行操作！");
+
                 time=nTime;
             }
         }
