@@ -1,7 +1,6 @@
 package com.example.note.justdo.Widget;
 
 import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
