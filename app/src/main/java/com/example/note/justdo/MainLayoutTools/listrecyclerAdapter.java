@@ -843,11 +843,11 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     public void removefinishedevents(){
         if(eventsnum!=getItemCount()-1){
-           final int finalpos=getItemCount()-1;
-            for(int i=eventsnum;i<=getItemCount()-1;i++){
-                mEvent.remove(eventsnum);
+           final int finalpos=getItemCount();
+            for(int i=getItemCount()-1;i>=eventsnum;i--){
+                mEvent.remove(i);
             }
-            notifyItemRangeRemoved(eventsnum,getItemCount()-eventsnum);
+            notifyItemRangeChanged(eventsnum-1,finalpos-eventsnum);
         }
         }
 }
