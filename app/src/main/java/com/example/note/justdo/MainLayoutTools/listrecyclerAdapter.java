@@ -841,5 +841,14 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyItemRangeChanged(finalpos + 1, getItemCount() - finalpos - 1);
 
     }
+    public void removefinishedevents(){
+        if(eventsnum!=getItemCount()-1){
+           final int finalpos=getItemCount()-1;
+            for(int i=eventsnum;i<=getItemCount()-1;i++){
+                mEvent.remove(eventsnum);
+            }
+            notifyItemRangeRemoved(eventsnum,getItemCount()-eventsnum);
+        }
+        }
 }
 

@@ -1,9 +1,9 @@
 package com.example.note.justdo;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
-import org.greenrobot.greendao.annotation.Generated;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +36,10 @@ public class Event {
     int hour;
     int minute;
     int second;
+    private long tLatitude;
+    private long Longitude;
+    private double radius;//选定地点提醒的半径
+    private String place;//选择地点的名称
 
     public int getListnum() {
         return listnum;
@@ -57,7 +61,39 @@ public class Event {
         this.context = context;
     }
 
-    
+
+    public long gettLatitude() {
+        return tLatitude;
+    }
+
+    public void settLatitude(long tLatitude) {
+        this.tLatitude = tLatitude;
+    }
+
+    public long getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(long longitude) {
+        Longitude = longitude;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
     public Event(Long id, String context, int listid, String listtitle, int listnum) {
         this.id = id;
         this.context = context;

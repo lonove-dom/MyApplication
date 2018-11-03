@@ -957,6 +957,7 @@ public class MainActivity extends AppCompatActivity  {
                 vibrator.vibrate(300);
                 Log.i(TAG, "检测到摇晃，执行操作！");
                 eventdaomanger.deletefinishedEvent(listid);
+                listrecyclerAdapter.removefinishedevents();
                 time=nTime;
             }
         }
