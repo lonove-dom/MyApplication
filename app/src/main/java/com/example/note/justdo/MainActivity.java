@@ -956,7 +956,7 @@ public class MainActivity extends AppCompatActivity  {
             if (speed >= SPEED_SHRESHOLD&&nTime-time>1000) {
                 vibrator.vibrate(300);
                 Log.i(TAG, "检测到摇晃，执行操作！");
-
+                eventdaomanger.deletefinishedEvent(listid);
                 time=nTime;
             }
         }

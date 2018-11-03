@@ -106,6 +106,26 @@ public class Eventdaomanger {
             }
         }*/
     }
+    public void deletefinishedEvent(int listid){
+        DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        EventDao eventDao = daoSession.getEventDao();
+        QueryBuilder<Event> qb = eventDao.queryBuilder();
+        qb.where(EventDao.Properties.Listid.eq(listid),EventDao.Properties.Context.notEq("SYMBOL STR"),EventDao.Properties.IsLinearShow.eq(true)).orderAsc(EventDao.Properties.Listid);
+        List<Event> list = qb.list();
+        for(Event event:list){
+            deleteByid(event);
+        }
+
+       /* List<Event> list=queryEventList(listid);
+        List<Event> finlist=new ArrayList<>();
+        for(Event event:list){
+            if(!event.getContext().equals("SYMBOL STR")){
+                finlist.add(event);
+                Log.d("TAG","list message=="+event.getContext()+"list ID=="+event.getId());
+            }
+        }*/
+    }
     public List<Event> queryEventList(int listid) {
         DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();

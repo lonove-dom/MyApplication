@@ -55,16 +55,18 @@ public class WelcomeActivity extends Activity {
                   firstevent.setListid(1);
                   firstevent.setContext("1");
                     ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
-                    firstevent.setContext("2");
-                    ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
-                    firstevent.setContext("3");
+                    Event secondevent=new Event();
+                    secondevent.setListid(1);
+                   secondevent.setContext("2");
+                    ((App)getApplication()).getEventdaomanger().insertevent(secondevent);
+              /*      firstevent.setContext("3");
                     ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
                     firstevent.setContext("4");
                     ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
                     firstevent.setContext("5");
                     ((App)getApplication()).getEventdaomanger().insertevent(firstevent);
 
-
+*/
                 }
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 startActivity(intent);
