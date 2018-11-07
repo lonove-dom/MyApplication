@@ -69,7 +69,8 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     listTimeViewHolder listTimeViewHolder;
     int eventsnum;
     final int NormalType = 1;
-    final int TimeType = 2;
+    final int TPType = 2;
+
     private SimpleDateFormat HmssimpleDateFormat;
     private SimpleDateFormat YmdsimpleDateFormat;
     private SimpleDateFormat AllsimpleDateFormat;
@@ -107,7 +108,7 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        return mEvent.get(position).getStartmills() > 0 ? TimeType : NormalType;
+        return mEvent.get(position).getStartmills() > 0||mEvent.get(position).getRadius()>0 ? TPType : NormalType;
     }
 
     @Override
@@ -316,121 +317,130 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mlistviewOnClickListener.OnitemClickListener(v, pos);
                 }
             });
-        } else {//如果标记了时间提醒
+        } else {//如果标记了时间/地点提醒
             final Date nowDate = new Date();
-            String TimeString;
-            String ExtraTimeString;
-            String FinalString;
-            String intervalString;
             content = ((listTimeViewHolder) holder).content;
             timeinformation = ((listTimeViewHolder) holder).timeinformation;
             focusedchildview = ((listTimeViewHolder) holder).linearLayout;
             Event CusorEvent = mEvent.get(position);
-            if ((CusorEvent.getType() > 0) && (new Date().getTime() > CusorEvent.getStartmills())) {
-                //有时间间隔的时间提醒，则更新当前event
-                CusorEvent.getNextstartmills();
-                Event updateev = eventdaomanger.getDaoSession().getEventDao().load(CusorEvent.getId());
-                updateev.setStartmills(CusorEvent.getStartmills());
-                eventdaomanger.getDaoSession().getEventDao().update(updateev);
-            }
             content.setText(CusorEvent.toString());
-            if (CusorEvent.getStartmills() < (nowDate.getTime())) {//在当前时间之前
-                long Timelag = nowDate.getTime() - new LocalDate().toDateTimeAtStartOfDay().getMillis();
-                if (CusorEvent.getIsLinearShow()) {
+            if(CusorEvent.getStartmills()>0) {
+                String TimeString;
+                String ExtraTimeString;
+                String FinalString;
+                String intervalString;
+                if ((CusorEvent.getType() > 0) && (new Date().getTime() > CusorEvent.getStartmills())) {
+                    //有时间间隔的时间提醒，则更新当前event
+                    CusorEvent.getNextstartmills();
+                    Event updateev = eventdaomanger.getDaoSession().getEventDao().load(CusorEvent.getId());
+                    updateev.setStartmills(CusorEvent.getStartmills());
+                    eventdaomanger.getDaoSession().getEventDao().update(updateev);
+                }
+             //   content.setText(CusorEvent.toString());
+                if (CusorEvent.getStartmills() < (nowDate.getTime())) {//在当前时间之前
+                    long Timelag = nowDate.getTime() - new LocalDate().toDateTimeAtStartOfDay().getMillis();
+                    if (CusorEvent.getIsLinearShow()) {
+                        timeinformation.setTextColor(Color.parseColor("#808080"));
+                    } else {
+                        timeinformation.setTextColor(Color.parseColor("#ff0000"));
+                    }//时间提醒为红色
+                    if ((CusorEvent.getStartmills() + Timelag) > nowDate.getTime()) {//今天
+                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                        FinalString = today + TimeString;
+                        timeinformation.setText(FinalString);
+                    } else if ((CusorEvent.getStartmills() + Timelag + 1000 * 24 * 60 * 60) > nowDate.getTime()) {//昨天
+                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                        FinalString = yesterday + TimeString;
+                        timeinformation.setText(FinalString);
+                    } else {
+                        //昨天之前
+                        TimeString = AllsimpleDateFormat.format(CusorEvent.getDate());
+                        timeinformation.setText(TimeString);
+                    }
+                } else {//未来
+                    int dayofweek = CusorEvent.getCalendar().get(Calendar.DAY_OF_WEEK);
+                    String DayofWeek = getDayofWeek(dayofweek);
                     timeinformation.setTextColor(Color.parseColor("#808080"));
-                } else {
-                    timeinformation.setTextColor(Color.parseColor("#ff0000"));
-                }//时间提醒为红色
-                if ((CusorEvent.getStartmills() + Timelag) > nowDate.getTime()) {//今天
-                    TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                    FinalString = today + TimeString;
-                    timeinformation.setText(FinalString);
-                } else if ((CusorEvent.getStartmills() + Timelag + 1000 * 24 * 60 * 60) > nowDate.getTime()) {//昨天
-                    TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                    FinalString = yesterday + TimeString;
-                    timeinformation.setText(FinalString);
-                } else {
-                    //昨天之前
-                    TimeString = AllsimpleDateFormat.format(CusorEvent.getDate());
-                    timeinformation.setText(TimeString);
-                }
-            } else {//未来
-                int dayofweek = CusorEvent.getCalendar().get(Calendar.DAY_OF_WEEK);
-                String DayofWeek = getDayofWeek(dayofweek);
-                timeinformation.setTextColor(Color.parseColor("#808080"));
-                /**
-                 * 先根据type确定timeinformation的内容
-                 * 非循环提醒，需对提醒时间为昨天之前，昨天，今天，明天，明天之后做判断，以确定不同的文字内容
-                 * 循环提醒，目前内容为类型+时间+下一日程日期（如：每天 9：00  下一日程：X年X月X日）
-                 */
-                switch (CusorEvent.getType()) {
-                    case 0:
-                        long Timelag = 24 * 60 * 60 * 1000 + new LocalDate().toDateTimeAtStartOfDay().getMillis() - nowDate.getTime();
-                        if ((nowDate.getTime() + Timelag) > CusorEvent.getStartmills()) {//今天
+                    /**
+                     * 先根据type确定timeinformation的内容
+                     * 非循环提醒，需对提醒时间为昨天之前，昨天，今天，明天，明天之后做判断，以确定不同的文字内容
+                     * 循环提醒，目前内容为类型+时间+下一日程日期（如：每天 9：00  下一日程：X年X月X日）
+                     */
+                    switch (CusorEvent.getType()) {
+                        case 0:
+                            long Timelag = 24 * 60 * 60 * 1000 + new LocalDate().toDateTimeAtStartOfDay().getMillis() - nowDate.getTime();
+                            if ((nowDate.getTime() + Timelag) > CusorEvent.getStartmills()) {//今天
+                                TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                                FinalString = today + TimeString;
+                                timeinformation.setText(FinalString);
+                            } else if ((nowDate.getTime() + Timelag + 24 * 60 * 60 * 1000) > CusorEvent.getStartmills()) {//明天
+                                TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                                FinalString = tomorrow + TimeString;
+                                timeinformation.setText(FinalString);
+                            } else {//明天之后的时间
+                                TimeString = AllsimpleDateFormat.format(CusorEvent.getDate());
+                                timeinformation.setText(TimeString);
+                            }
+                            break;
+                        case 1:
                             TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                            FinalString = today + TimeString;
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            FinalString = EveryDay + TimeString + space + NextDate + ExtraTimeString;
                             timeinformation.setText(FinalString);
-                        } else if ((nowDate.getTime() + Timelag + 24 * 60 * 60 * 1000) > CusorEvent.getStartmills()) {//明天
+                            break;
+                        case 2:
                             TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                            FinalString = tomorrow + TimeString;
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            FinalString = EveryWeek + DayofWeek + TimeString + space + NextDate + ExtraTimeString;
                             timeinformation.setText(FinalString);
-                        } else {//明天之后的时间
-                            TimeString = AllsimpleDateFormat.format(CusorEvent.getDate());
-                            timeinformation.setText(TimeString);
-                        }
-                        break;
-                    case 1:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        FinalString = EveryDay + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 2:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        FinalString = EveryWeek + DayofWeek + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 3:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        FinalString = EveryMonth + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 4:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        FinalString = WorkDay + TimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 5:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        intervalString = Integer.toString(CusorEvent.getIntervel());
-                        FinalString = Every + intervalString + Day + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 6:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        intervalString = Integer.toString(CusorEvent.getIntervel());
-                        FinalString = Every + intervalString + Week + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 7:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        intervalString = Integer.toString(CusorEvent.getIntervel());
-                        FinalString = Every + intervalString + Month + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
-                    case 8:
-                        TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
-                        ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
-                        intervalString = Integer.toString(CusorEvent.getIntervel());
-                        FinalString = Every + intervalString + Year + TimeString + space + NextDate + ExtraTimeString;
-                        timeinformation.setText(FinalString);
-                        break;
+                            break;
+                        case 3:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            FinalString = EveryMonth + TimeString + space + NextDate + ExtraTimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                        case 4:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            FinalString = WorkDay + TimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                        case 5:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            intervalString = Integer.toString(CusorEvent.getIntervel());
+                            FinalString = Every + intervalString + Day + TimeString + space + NextDate + ExtraTimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                        case 6:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            intervalString = Integer.toString(CusorEvent.getIntervel());
+                            FinalString = Every + intervalString + Week + TimeString + space + NextDate + ExtraTimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                        case 7:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            intervalString = Integer.toString(CusorEvent.getIntervel());
+                            FinalString = Every + intervalString + Month + TimeString + space + NextDate + ExtraTimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                        case 8:
+                            TimeString = HmssimpleDateFormat.format(CusorEvent.getDate());
+                            ExtraTimeString = YmdsimpleDateFormat.format(CusorEvent.getDate());
+                            intervalString = Integer.toString(CusorEvent.getIntervel());
+                            FinalString = Every + intervalString + Year + TimeString + space + NextDate + ExtraTimeString;
+                            timeinformation.setText(FinalString);
+                            break;
+                    }
                 }
+            }
+            else //设置地点提醒字符串
+                {
+                    timeinformation.setTextColor(Color.parseColor("#808080"));
+                timeinformation.setText(CusorEvent.getPlace());
+
             }
             if (CusorEvent.getIsLinearShow()) {//第一次绘制时，如果对应位置事件是完成事件
                 content.setTextColor(Color.parseColor("#808080"));
@@ -505,7 +515,7 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                         changetextColorToGray(timeinformation);
                                     } else {
                                         changetextColorToBlack(content);
-                                        if (event.getStartmills() < nowDate.getTime()) {
+                                        if (event.getStartmills()>0&&event.getStartmills() < nowDate.getTime()) {
                                             timeinformation.setTextColor(Color.parseColor("#ff0000"));
                                         }
                                     }
@@ -712,7 +722,7 @@ public class listrecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         mEvent.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount() - position);
+        notifyItemRangeChanged(position, getItemCount() - position+1);
     }
 
     /**

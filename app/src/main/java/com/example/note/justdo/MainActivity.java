@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity  {
     ConstraintLayout constraintLayout;//主布局
 
     //时间提醒部分
+
     TimeManger timeManger;
     MyTimeWindow myTimeWindow;//时间提醒设置窗口
     long Cstartmills;//记录当前设置时间
@@ -133,9 +134,14 @@ public class MainActivity extends AppCompatActivity  {
         placebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(TextUtils.isEmpty(addedit.getText().toString())){
+                    addedit.setHintTextColor(Color.parseColor("#ff0000"));
+                    addedit.setHint("请输入内容");
+                }
                // placebtn.setVisibility(View.INVISIBLE);
+                else {
                 Intent intent = new Intent(MainActivity.this, NewMap.class);
-                startActivity(intent);
+                startActivity(intent);}
             }
         });
         timebtn=findViewById(R.id.timebtn);//时间提醒按钮
@@ -143,13 +149,18 @@ public class MainActivity extends AppCompatActivity  {
         timebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //点击时收起软键盘，隐藏时间提醒按钮
-                im.hideSoftInputFromWindow(getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                timebtn.setVisibility(View.INVISIBLE);
-                placebtn.setVisibility(View.INVISIBLE);
-                //显示时间设置窗口
-              showTimeWindowFromBottom();
-
+                if(TextUtils.isEmpty(addedit.getText().toString())){
+                    addedit.setHintTextColor(Color.parseColor("#ff0000"));
+                    addedit.setHint("请输入内容");
+                }
+                else {
+                    //点击时收起软键盘，隐藏时间提醒按钮
+                    im.hideSoftInputFromWindow(getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    timebtn.setVisibility(View.INVISIBLE);
+                    placebtn.setVisibility(View.INVISIBLE);
+                    //显示时间设置窗口
+                    showTimeWindowFromBottom();
+                }
             }
         });
         deletereminder=findViewById(R.id.deletelayout);//撤销删除布局
@@ -242,6 +253,11 @@ public class MainActivity extends AppCompatActivity  {
         List<Event> eventList = eventdaomanger.getfinalEventlist(listid);//获取列表
         initrecyclerview(eventList);
         //listrecyclerAdapter.notifyDataSetChanged();
+        if(getApp().getRadius()>0){
+            onDealfinished();
+        }else if(getApp().getRadius()==0&&!mLinearLayout.getFlags().equals("normal")){
+            im.showSoftInput(addedit,0);//软键盘重新跳出
+        }
         super.onResume();
         //listrecyclerAdapter.notifyDataSetChanged();
         if (sensorManager != null) {
@@ -270,6 +286,16 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         String flags=mLinearLayout.getFlags();
+        if(myTimeWindow.isShowing()){
+            timeset=true;//标记进行了时间设置
+            initStartTime();
+            Toast.makeText(MainActivity.this,"取消",Toast.LENGTH_SHORT).show();
+            myTimeWindow.dismiss();//窗口消失
+            im.showSoftInput(addedit,0);//软键盘重新跳出
+            timebtn.setVisibility(View.VISIBLE);//时间提醒按钮重新显示
+            placebtn.setVisibility(View.VISIBLE);
+            return;
+        }
         switch (flags) {
             case "add":onaddfinished();
                 break;
@@ -289,6 +315,14 @@ public class MainActivity extends AppCompatActivity  {
         }
         return super.dispatchTouchEvent(event);
     }
+    private void onDealfinished(){
+        switch (mLinearLayout.getFlags()) {
+            case "add":onaddfinished();
+                break;
+            case "change":onchangefinished();
+                break;
+        }
+    }
 
     /**
      * 添加完成回车/点击处理
@@ -303,10 +337,14 @@ public class MainActivity extends AppCompatActivity  {
             Event newev = new Event(addedit.getText().toString(), getApp().getListid(), getApp().getListtitle());
 
             if(getApp().getRadius()!=0){
-
+              newev.setPlace(getApp().getPlace());
+              newev.setRadius(getApp().getRadius());
+              newev.setLatitude(getApp().getLatlng().latitude);
+              newev.setLongitude(getApp().getLatlng().longitude);
+              getApp().setRadius(0);
             }
             //时间提醒设置
-            if (Cstartmills > 0) {
+             if (Cstartmills > 0) {
                 newev.setStartmills(Cstartmills);
                 newev.setIntervel(Cintevel);
                 newev.setType(CType);
@@ -346,42 +384,58 @@ public class MainActivity extends AppCompatActivity  {
         String currentcontent=addedit.getText().toString();
         //编辑框空处理
         if(TextUtils.isEmpty(currentcontent)){
-            if(timeset&&Cstartmills==0&&event.getStartmills()>0)
+            if(event.getStartmills()>0)
             {  timeManger.cancalJobByIdTAG(Long.toString(event.getId()));
                 daoSession.getEventDao().deleteByKey(event.getId());
                 listrecyclerAdapter.removeitem(currentpos);
-                timeset=false;
-                return;
+
             }
-            else if((event.getStartmills()==0&&Cstartmills==0)){
+            else {
                 daoSession.getEventDao().deleteByKey(event.getId());
                 listrecyclerAdapter.removeitem(currentpos);
-                timeset=false;
-                return;
+
             }
         }
-        //内容不同时，需要更新
-        if(!currentcontent.equals(event.getContext())) {
-            event.setContext(currentcontent);
-            needupdate=true;
-        }
-        //取消时间提醒时，需要更新
-        if(timeset&&Cstartmills==0&&event.getStartmills()>0){
-            event.setStartmills(Cstartmills);
-            event.setIntervel(Cintevel);
-            event.setType(CType);
-            timeManger.cancalJobByIdTAG(Long.toString(event.getId()));
-            needupdate=true;
-        }
-        //进行时间编辑，需要更新
-        if(Cstartmills>0){
-            event.setStartmills(Cstartmills);
-            event.setIntervel(Cintevel);
-            event.setType(CType);
-            if(CType>0&&(Cstartmills<(new Date().getTime()))){
-                event.getNextstartmills();
+        else {
+            //内容不同时，需要更新
+            if (!currentcontent.equals(event.getContext())) {
+                event.setContext(currentcontent);
+                needupdate = true;
             }
-            needupdate=true;
+            //取消时间提醒时，需要更新
+            if (timeset && Cstartmills == 0 && event.getStartmills() > 0) {
+                event.setStartmills(Cstartmills);
+                event.setIntervel(Cintevel);
+                event.setType(CType);
+                timeManger.cancalJobByIdTAG(Long.toString(event.getId()));
+                needupdate = true;
+            }
+            //进行时间编辑，需要更新
+            if (Cstartmills > 0) {
+                event.setStartmills(Cstartmills);
+                event.setIntervel(Cintevel);
+                event.setType(CType);
+                if (CType > 0 && (Cstartmills < (new Date().getTime()))) {
+                    event.getNextstartmills();
+                }
+                if(event.getRadius()>0){
+                    event.setRadius(0);
+                }
+                needupdate = true;
+            }
+            if(getApp().getRadius()>0){
+                event.setPlace(getApp().getPlace());
+                event.setRadius(getApp().getRadius());
+                event.setLatitude(getApp().getLatlng().latitude);
+                event.setLongitude(getApp().getLatlng().longitude);
+                getApp().setRadius(0);
+                if(event.getStartmills()>0){
+                    event.setStartmills(0);
+                    event.setIntervel(0);
+                    event.setType(0);
+                }
+                needupdate=true;
+            }
         }
         //编辑框收起动画，初始化数据
         mLinearLayout.finishedit();
@@ -602,9 +656,10 @@ public class MainActivity extends AppCompatActivity  {
                     CType = Type;
                     Toast.makeText(MainActivity.this, "确定", Toast.LENGTH_SHORT).show();
                     myTimeWindow.dismiss();//窗口消失
-                         im.showSoftInput(addedit,0);//软键盘重新弹出
-                    timebtn.setVisibility(View.VISIBLE);//时间提醒按钮重新显示
-                    placebtn.setVisibility(View.VISIBLE);
+                    onDealfinished();
+               //          im.showSoftInput(addedit,0);//软键盘重新弹出
+               //     timebtn.setVisibility(View.VISIBLE);//时间提醒按钮重新显示
+                //    placebtn.setVisibility(View.VISIBLE);
                 }
             }
 

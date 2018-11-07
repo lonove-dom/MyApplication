@@ -213,6 +213,10 @@ public class Eventdaomanger {
         long startmills=event.getStartmills();
         int Type=event.getType();
         int interval=event.getIntervel();
+        double Longitude=event.getLongitude();
+        double latitude=event.getLatitude();
+        double raduis=event.getRadius();
+        String place=event.getPlace();
         //下移
         if (finalpos > startpos) {
             for (int i = startpos; i <= finalpos; i++) {
@@ -225,6 +229,10 @@ public class Eventdaomanger {
                     event1.setStartmills(event2.getStartmills());
                     event1.setIntervel(event2.getIntervel());
                     event1.setType(event2.getType());
+                    event1.setLongitude(event2.getLongitude());
+                    event1.setLatitude(event2.getLatitude());
+                    event1.setRadius(event2.getRadius());
+                    event1.setPlace(event2.getPlace());
                     Log.d("TAG",event1.getContext()+"ID=="+event1.getId());
              //       daoSession.getEventDao().update(event);
                 } else {//最后一个事件特殊处理，赋移位事件的信息
@@ -234,6 +242,10 @@ public class Eventdaomanger {
                     ev.setType(Type);
                     ev.setIntervel(interval);
                     ev.setStartmills(startmills);
+                    ev.setPlace(place);
+                    ev.setRadius(raduis);
+                    ev.setLatitude(latitude);
+                    ev.setLongitude(Longitude);
                  //   daoSession.getEventDao().update(ev);
                     Log.d("TAG",ev.getContext()+"ID=="+ev.getId());
                 }
@@ -249,6 +261,10 @@ public class Eventdaomanger {
                        event1.setStartmills(event2.getStartmills());
                        event1.setIntervel(event2.getIntervel());
                        event1.setType(event2.getType());
+                       event1.setLongitude(event2.getLongitude());
+                       event1.setLatitude(event2.getLatitude());
+                       event1.setRadius(event2.getRadius());
+                       event1.setPlace(event2.getPlace());
                    //    daoSession.getEventDao().update(event);
                        Log.d("TAG",event1.getContext());
                    }
@@ -259,6 +275,10 @@ public class Eventdaomanger {
                        ev.setType(Type);
                        ev.setIntervel(interval);
                        ev.setStartmills(startmills);
+                       ev.setPlace(place);
+                       ev.setRadius(raduis);
+                       ev.setLatitude(latitude);
+                       ev.setLongitude(Longitude);
                  //      daoSession.getEventDao().update(ev);
                        Log.d("TAG",ev.getContext());
                    }
@@ -276,6 +296,10 @@ public class Eventdaomanger {
         long startmills=event.getStartmills();
         int Type=event.getType();
         int interval=event.getIntervel();
+        double Longitude=event.getLongitude();
+        double latitude=event.getLatitude();
+        double raduis=event.getRadius();
+        String place=event.getPlace();
         //下移
         if (finalpos > startpos) {
             for (int i = startpos; i <= finalpos; i++) {
@@ -283,6 +307,10 @@ public class Eventdaomanger {
                     //除最后一个事件外，依次将后一事件的信息转移到当前事件
                     Event event1 = events.get(i);
                     Event event2=events.get(i+1);
+                    event1.setLongitude(event2.getLongitude());
+                    event1.setLatitude(event2.getLatitude());
+                    event1.setRadius(event2.getRadius());
+                    event1.setPlace(event2.getPlace());
                     event1.setContext(event2.getContext());
                     event1.setLinearShow(event2.getLinearShow());
                     event1.setStartmills(event2.getStartmills());
@@ -297,6 +325,10 @@ public class Eventdaomanger {
                     ev.setType(Type);
                     ev.setIntervel(interval);
                     ev.setStartmills(startmills);
+                    ev.setPlace(place);
+                    ev.setRadius(raduis);
+                    ev.setLatitude(latitude);
+                    ev.setLongitude(Longitude);
                     //   daoSession.getEventDao().update(ev);
                     Log.d("TAG",ev.getContext()+"ID=="+ev.getId());
                 }
@@ -312,6 +344,10 @@ public class Eventdaomanger {
                     event1.setStartmills(event2.getStartmills());
                     event1.setIntervel(event2.getIntervel());
                     event1.setType(event2.getType());
+                    event1.setLongitude(event2.getLongitude());
+                    event1.setLatitude(event2.getLatitude());
+                    event1.setRadius(event2.getRadius());
+                    event1.setPlace(event2.getPlace());
                     //    daoSession.getEventDao().update(event);
                     Log.d("TAG",event1.getContext());
                 }
@@ -322,6 +358,10 @@ public class Eventdaomanger {
                     ev.setType(Type);
                     ev.setIntervel(interval);
                     ev.setStartmills(startmills);
+                    ev.setPlace(place);
+                    ev.setRadius(raduis);
+                    ev.setLatitude(latitude);
+                    ev.setLongitude(Longitude);
                     //      daoSession.getEventDao().update(ev);
                     Log.d("TAG",ev.getContext());
                 }

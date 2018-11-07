@@ -36,8 +36,8 @@ public class Event {
     int hour;
     int minute;
     int second;
-    private long tLatitude;
-    private long Longitude;
+    private double Latitude;
+    private double Longitude;
     private double radius;//选定地点提醒的半径
     private String place;//选择地点的名称
 
@@ -62,20 +62,20 @@ public class Event {
     }
 
 
-    public long gettLatitude() {
-        return tLatitude;
+    public double getLatitude() {
+        return Latitude;
     }
 
-    public void settLatitude(long tLatitude) {
-        this.tLatitude = tLatitude;
+    public void setLatitude(double Latitude) {
+        this.Latitude = Latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return Longitude;
     }
 
-    public void setLongitude(long longitude) {
-        Longitude = longitude;
+    public void setLongitude(double longitude) {
+        this.Longitude = longitude;
     }
 
     public double getRadius() {
@@ -117,10 +117,10 @@ public class Event {
     public Event() {
     }
 
-    @Generated(hash = 315550452)
+    @Generated(hash = 1543406048)
     public Event(Long id, String context, int listid, String listtitle, int listnum, String BackgroundString,
             Boolean IsLinearShow, long startmills, int intervel, int type, int hour, int minute, int second,
-            long tLatitude, long Longitude, double radius, String place) {
+            double Latitude, double Longitude, double radius, String place) {
         this.id = id;
         this.context = context;
         this.listid = listid;
@@ -134,11 +134,34 @@ public class Event {
         this.hour = hour;
         this.minute = minute;
         this.second = second;
-        this.tLatitude = tLatitude;
+        this.Latitude = Latitude;
         this.Longitude = Longitude;
         this.radius = radius;
         this.place = place;
     }
+
+//    @Generated(hash = 315550452)
+//    public Event(Long id, String context, int listid, String listtitle, int listnum, String BackgroundString,
+//            Boolean IsLinearShow, long startmills, int intervel, int type, int hour, int minute, int second,
+//            double Latitude, double Longitude, double radius, String place) {
+//        this.id = id;
+//        this.context = context;
+//        this.listid = listid;
+//        this.listtitle = listtitle;
+//        this.listnum = listnum;
+//        this.BackgroundString = BackgroundString;
+//        this.IsLinearShow = IsLinearShow;
+//        this.startmills = startmills;
+//        this.intervel = intervel;
+//        this.type = type;
+//        this.hour = hour;
+//        this.minute = minute;
+//        this.second = second;
+//        this.Latitude = Latitude;
+//        this.Longitude = Longitude;
+//        this.radius = radius;
+//        this.place = place;
+//    }
 
     @Override
     public String toString() {
@@ -322,11 +345,11 @@ public class Event {
         this.second = second;
     }
 
-    public long getTLatitude() {
-        return this.tLatitude;
-    }
-
-    public void setTLatitude(long tLatitude) {
-        this.tLatitude = tLatitude;
-    }
+//    public long getTLatitude() {
+//        return this.tLatitude;
+//    }
+//
+//    public void setTLatitude(long tLatitude) {
+//        this.tLatitude = tLatitude;
+//    }
 }

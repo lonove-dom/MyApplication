@@ -23,6 +23,7 @@ public class App extends Application {
     private double radius;//选定地点提醒的半径
     private String place;//选择地点的名称
 
+
     public Bitmap getViewbackground() {
         return viewbackground;
     }

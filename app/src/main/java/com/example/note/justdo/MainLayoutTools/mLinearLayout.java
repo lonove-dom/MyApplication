@@ -527,6 +527,7 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
         turnNormal();
         editdelayset();
         im = (InputMethodManager) cont.getSystemService(INPUT_METHOD_SERVICE);
+        editText.setHintTextColor(Color.parseColor("#ffffff"));
         editText.setCursorVisible(false);
         editText.setText(null);
         im.hideSoftInputFromWindow(appcomp.getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

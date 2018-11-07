@@ -87,6 +87,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
     private LatLng position;//Marker的position
     private String place;//marker的位置名称
     public App myApp;
+    String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -681,10 +682,12 @@ public void onBackPressed() {
             float distance=AMapUtils.calculateLineDistance(mylatlng2, position);
             if(distance<=circle.getRadius()){
                 builder.setMessage("确定在离开"+marker.getTitle()+circle.getRadius()+"米后提醒您吗？");
+                message="离开"+" "+marker.getTitle()+circle.getRadius()+"米";
                 //    设置一个PositiveButton
             }
             else{
                 builder.setMessage("确定在进入"+place+circle.getRadius()+"米后提醒您吗？");
+                message="进入"+" "+marker.getTitle()+circle.getRadius()+"米";
             }
                 //    设置一个PositiveButton
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
@@ -694,7 +697,7 @@ public void onBackPressed() {
                     {
                         myApp.setLatlng(position);
                         myApp.setRadius(circle.getRadius());
-                        myApp.setPlace(place);
+                        myApp.setPlace(message);
                         NewMap.super.onBackPressed();
                     }
                 });
