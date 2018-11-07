@@ -108,14 +108,19 @@ public class Event {
         this.listtitle = listtitle;
     }
 
+    public Event(int listid,String content){
+        this.listid=listid;
+        this.context=content;
+    }
+
     @Generated(hash = 344677835)
     public Event() {
     }
 
-    @Generated(hash = 1309130168)
-    public Event(Long id, String context, int listid, String listtitle, int listnum,
-            String BackgroundString, Boolean IsLinearShow, long startmills, int intervel, int type,
-            int hour, int minute, int second) {
+    @Generated(hash = 315550452)
+    public Event(Long id, String context, int listid, String listtitle, int listnum, String BackgroundString,
+            Boolean IsLinearShow, long startmills, int intervel, int type, int hour, int minute, int second,
+            long tLatitude, long Longitude, double radius, String place) {
         this.id = id;
         this.context = context;
         this.listid = listid;
@@ -129,6 +134,10 @@ public class Event {
         this.hour = hour;
         this.minute = minute;
         this.second = second;
+        this.tLatitude = tLatitude;
+        this.Longitude = Longitude;
+        this.radius = radius;
+        this.place = place;
     }
 
     @Override
@@ -311,5 +320,13 @@ public class Event {
 
     public void setSecond(int second) {
         this.second = second;
+    }
+
+    public long getTLatitude() {
+        return this.tLatitude;
+    }
+
+    public void setTLatitude(long tLatitude) {
+        this.tLatitude = tLatitude;
     }
 }

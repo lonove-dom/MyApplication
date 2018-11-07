@@ -136,15 +136,14 @@ public class WidgetProvider extends AppWidgetProvider {
             //取消时间提醒！
             int poi=intent.getIntExtra(LISTVIEW_POSITION,0);
             Log.d("TAG","wg_list被点击了"+poi);
-            final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-            final ComponentName cn = new ComponentName(context,
-                    WidgetProvider.class);
             Eventdaomanger manger=new Eventdaomanger(context);
           int finalposition =WidgetFactory.mEvents.size()-1;
           manger.updateSwapedevents(1,poi,finalposition,true);
+            final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            final ComponentName cn = new ComponentName(context,
+                    WidgetProvider.class);
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn),
                     R.id.wg_listview);
-
 
 
         }

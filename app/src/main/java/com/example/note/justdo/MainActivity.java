@@ -1,5 +1,7 @@
 package com.example.note.justdo;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,6 +45,7 @@ import com.example.note.justdo.MainLayoutTools.mLinearLayout;
 import com.example.note.justdo.MainLayoutTools.mRecyclerview;
 import com.example.note.justdo.TimeReminder.MyTimeWindow;
 import com.example.note.justdo.TimeReminder.TimeManger;
+import com.example.note.justdo.Widget.WidgetProvider;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,6 +111,8 @@ public class MainActivity extends AppCompatActivity  {
     private static final String TAG = "TestSensorActivity";
     private static final int SENSOR_SHAKE = 10;
     long time = System.currentTimeMillis();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,12 +234,16 @@ public class MainActivity extends AppCompatActivity  {
         //摇一摇
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
     }
 
     @Override
     protected void onResume() {
+        List<Event> eventList = eventdaomanger.getfinalEventlist(listid);//获取列表
+        initrecyclerview(eventList);
+        //listrecyclerAdapter.notifyDataSetChanged();
         super.onResume();
-        listrecyclerAdapter.notifyDataSetChanged();
+        //listrecyclerAdapter.notifyDataSetChanged();
         if (sensorManager != null) {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         }
@@ -246,6 +255,12 @@ public class MainActivity extends AppCompatActivity  {
     }
     @Override
     protected  void onPause(){
+        //widget相关
+        final AppWidgetManager mgr= AppWidgetManager.getInstance(this);
+        final ComponentName cn = new ComponentName(this,
+                WidgetProvider.class);
+        mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn),
+                R.id.wg_listview);
         super.onPause();
         if (sensorManager != null) {// 取消监听器
             sensorManager.unregisterListener(sensorEventListener);
@@ -288,6 +303,7 @@ public class MainActivity extends AppCompatActivity  {
             Event newev = new Event(addedit.getText().toString(), getApp().getListid(), getApp().getListtitle());
 
             if(getApp().getRadius()!=0){
+
             }
             //时间提醒设置
             if (Cstartmills > 0) {
