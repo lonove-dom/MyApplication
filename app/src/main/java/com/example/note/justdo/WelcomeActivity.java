@@ -66,10 +66,10 @@ public class WelcomeActivity extends Activity {
             ((App) getApplication()).getEventdaomanger().insertevent(thirdevent);
             Event fourthevent = new Event(1, "长按拖动排序");
             ((App) getApplication()).getEventdaomanger().insertevent(fourthevent);
-            Event sixevent = new Event(1, "摇一摇删除所有已完成");
-            ((App) getApplication()).getEventdaomanger().insertevent(sixevent);
             Event seventhevent = new Event(1, "点击修改事项");
             ((App) getApplication()).getEventdaomanger().insertevent(seventhevent);
+            Event sixevent = new Event(1, "摇一摇删除所有已完成");
+            ((App) getApplication()).getEventdaomanger().insertevent(sixevent);
             Event fifthevent = new Event(1, "上拉打开菜单（未完成）");
             ((App) getApplication()).getEventdaomanger().insertevent(fifthevent);
         }

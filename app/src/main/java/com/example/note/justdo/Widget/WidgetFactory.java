@@ -3,6 +3,7 @@ package com.example.note.justdo.Widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -41,6 +42,13 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
        Event event = mEvents.get(position);
         //  rv.setImageViewResource(R.id.iv_lock, ((Integer) map.get(IMAGE_ITEM)).intValue());
         rv.setTextViewText(R.id.textView, event.getContext());
+        if(mEvents.get(position).getIsLinearShow()){
+            rv.setTextColor(R.id.textView, Color.parseColor("#808080"));
+        }
+        else{
+            rv.setTextColor(R.id.textView, Color.parseColor("#000000"));
+        }
+
 //        // 设置 第position位的“视图”对应的响应事件
 //        Intent fillInIntent = new Intent();
 //        fillInIntent.putExtra("Type", 0);
@@ -73,6 +81,11 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
      List<Event> original=new Eventdaomanger(mContext).getfinalEventlist(1);
         for(i=0;i<original.size();i++) {
             if(!original.get(i).getIsLinearShow()){
+                mEvents.add(original.get(i));
+            }
+        }
+        for(i=0;i<original.size();i++) {
+            if(original.get(i).getIsLinearShow()){
                 mEvents.add(original.get(i));
             }
         }
@@ -121,6 +134,11 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
         List<Event> original=new Eventdaomanger(mContext).getfinalEventlist(1);
         for(i=0;i<original.size();i++) {
             if(!original.get(i).getIsLinearShow()){
+                mEvents.add(original.get(i));
+            }
+        }
+        for(i=0;i<original.size();i++) {
+            if(original.get(i).getIsLinearShow()){
                 mEvents.add(original.get(i));
             }
         }

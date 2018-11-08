@@ -117,6 +117,8 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        Intent intent2=new Intent(context,WidgetService.class);
+        context.startService(intent2);
         String action = intent.getAction();
 //        if (action.equals("refresh")) {
 //            int i = 0;
@@ -138,7 +140,13 @@ public class WidgetProvider extends AppWidgetProvider {
             Log.d("TAG","wg_list被点击了"+poi);
             Eventdaomanger manger=new Eventdaomanger(context);
           int finalposition =WidgetFactory.mEvents.size()-1;
-          manger.updateSwapedevents(1,poi,finalposition,true);
+            Log.d("TAG","finalposition"+finalposition);
+          if(!WidgetFactory.mEvents.get(poi).getIsLinearShow()){
+         manger.updateSwapedevents(1,poi,finalposition,true);
+        }
+          else {
+              manger.updateSwapedevents(1,poi,0,false);
+          }
             final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             final ComponentName cn = new ComponentName(context,
                     WidgetProvider.class);

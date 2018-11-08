@@ -7,5 +7,5 @@
     <string name="choose_language">语言选择</string>
     <string name="key_choose_language">语言选择</string>
     <string name="key_choose_textsize">字体大小</string>
-    <string name="wg_empty">字体大小</string>
+    <string name="wg_empty">当前无待办事项</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.example.note.justdo;
 
+import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -39,6 +41,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
 import com.example.note.justdo.Amap.NewMap;
 import com.example.note.justdo.MainLayoutTools.listrecyclerAdapter;
 import com.example.note.justdo.MainLayoutTools.mLinearLayout;
@@ -1011,7 +1015,7 @@ public class MainActivity extends AppCompatActivity  {
                 return;
             }
             lastUpdateTime = currentUpdateTime;
-            long nTime=System.currentTimeMillis();
+             final long nTime=System.currentTimeMillis();
 // 传感器信息改变时执行该方法
             float[] values = event.values;
             float x = values[0]; // x轴方向的重力加速度，向右为正
@@ -1027,14 +1031,40 @@ public class MainActivity extends AppCompatActivity  {
             lastZ = z;
             double speed = (Math.sqrt(deltaX * deltaX + deltaY * deltaY
                     + deltaZ * deltaZ) / timeInterval) * 100;
-            if (speed >= SPEED_SHRESHOLD&&nTime-time>1000) {
-                vibrator.vibrate(300);
-                Log.i(TAG, "检测到摇晃，执行操作！");
-                eventdaomanger.deletefinishedEvent(listid);
-                listrecyclerAdapter.removefinishedevents();
+            if (speed >= SPEED_SHRESHOLD&&nTime-time>2000) {
                 time=nTime;
+                vibrator.vibrate(300);
+                Log.i(TAG, "检测到摇晃，执行操作！"); //    通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+                AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this);
+                //    设置Title的内容
+                builder.setTitle("设置位置提醒");
+                //    设置Content来显示一个信息
+
+                    builder.setMessage("您确定要删除所有已完成事项吗？" );
+                    //    设置一个PositiveButton
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        eventdaomanger.deletefinishedEvent(listid);
+                        listrecyclerAdapter.removefinishedevents();
+                    }
+        });
+        //    设置一个NegativeButton
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                return;
             }
-        }
+        });
+                builder.show();
+            }
+
+            }
+
 
 
         @Override
