@@ -2,7 +2,7 @@
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#bfa8a8a8"
+    android:background="#bfffffff"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -26,14 +26,28 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/wg_icon"
             android:text="@string/app_name" />
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/wg_button"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_widget_add"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"/>
+
 
     </RelativeLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
     <ListView
         android:id="@+id/wg_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#bfa8a8a8"
+        android:background="#00ffffff"
         android:columnWidth="80dip"
         android:gravity="center"
         android:horizontalSpacing="4dip"
@@ -41,14 +55,15 @@
         android:verticalSpacing="4dip"
         android:fadingEdge="none"
         android:divider="@null"
-        android:fadeScrollbars="true"/>
+        android:fadeScrollbars="true"
+        android:layout_marginLeft="10dp"/>
 
     <TextView
         android:id="@+id/wg_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="#bfa8a8a8"
+        android:layout_width="wrap_content"
+        android:layout_height="180dp"
+        android:background="#00ffffff"
         android:text="@string/wg_empty"
         android:visibility="visible" />
+    </LinearLayout>
 </LinearLayout>

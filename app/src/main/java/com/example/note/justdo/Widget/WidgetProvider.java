@@ -1,5 +1,7 @@
 package com.example.note.justdo.Widget;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -8,9 +10,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.note.justdo.Event;
 import com.example.note.justdo.Eventdaomanger;
 import com.example.note.justdo.R;
 
@@ -18,6 +28,8 @@ public class WidgetProvider extends AppWidgetProvider {
     public static final String CLICK_ACTION = "widget.listview.action.CLICK"; // listview点击事件的广播ACTION
     public static final String JUST_DO="widget.icon.action.CLICK";//点击icon或者标题
     public static final String LISTVIEW_POSITION= "widget.listview.CLECCTION";
+    public static final String CLICK_ADD="widget.button.ADD";
+    InputMethodManager im;//软键盘
 
     public void updateAppWidget(Context context,AppWidgetManager appWidgetManager,int appWidgetId){
         // 获取Widget的组件名
@@ -63,14 +75,14 @@ public class WidgetProvider extends AppWidgetProvider {
         remoteViews.setPendingIntentTemplate(R.id.wg_listview,
                 pendingIntentTemplate);
 
-//        // 刷新按钮
-//        final Intent refreshIntent = new Intent(context,
-//                MyRemoteAppWidget.class);
-//        refreshIntent.setAction("refresh");
-//        final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(
-//                context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        remoteViews.setOnClickPendingIntent(R.id.button_refresh,
-//                refreshPendingIntent);
+        // 刷新按钮
+        final Intent addIntent = new Intent(context,
+                WidgetProvider.class);
+        addIntent.setAction(CLICK_ADD);
+        final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(
+                context, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.wg_button,
+                refreshPendingIntent);
 
 
         // 更新Widget
@@ -165,7 +177,41 @@ public class WidgetProvider extends AppWidgetProvider {
             Log.d("TAG","标题或图标被点击了");
 
         }
+        if(action.equals(CLICK_ADD)){
+            Log.d("TAG","添加事项");
+//            showDialog(context);
+            Intent startAcIntent = new Intent();
+            startAcIntent.setComponent(new ComponentName("com.example.note.justdo","com.example.note.justdo.Widget.Widget_dialog"));
+            context.startActivity(startAcIntent);
+
+        }
 
     }
+    private void showDialog (final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.widget_add_dialog, null);
+       builder.setView(R.layout.widget_add_dialog);
+        final EditText newEditText = (EditText) view.findViewById(R.id.wg_edittext);
+        Button tick=(Button)view.findViewById(R.id.wg_tick);
+        final Dialog dialog = builder.create();
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);//这里设置的可以在桌面中显示对话框
+        dialog.show();
+        tick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String content=newEditText.getText().toString();
+                addEvent(content,context);
+                dialog.dismiss();
+
+            }
+        });
+    }
+private void addEvent(String string,Context context){
+    Event event=new Event(1,string);
+    Eventdaomanger manger=new Eventdaomanger(context);
+    manger.insertevent(event);
+}
 }
 

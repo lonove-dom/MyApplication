@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
 
     <application
         android:name="com.example.note.justdo.App"
@@ -68,6 +69,13 @@
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
             ></activity>
+        <activity
+            android:name="com.example.note.justdo.Widget.Widget_dialog"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/translucent">
+            <!--android:process="com.example.note.justdo.Widget.Widget_dialog">-->
+            ></activity>
         <!--MyRemoteService-->
         <service
             android:name=".Widget.WidgetService"
@@ -83,6 +91,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="widget.icon.action.CLICK"/>
                 <action android:name="widget.listview.action.CLICK" />
+                <action android:name="widget.button.ADD"/>
             </intent-filter>
         </receiver>
      <!--   <activity android:name=".ScrollActivity">

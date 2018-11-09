@@ -36,7 +36,7 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
         //  HashMap<String, Object> map;
 
         // 获取 item_widget_device.xml 对应的RemoteViews
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.item);
+        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_item);
 
         // 设置 第position位的“视图”的数据
        Event event = mEvents.get(position);
@@ -69,6 +69,7 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
        // fillInIntent.putExtra("Type", 0);
         fillInIntent.putExtra(WidgetProvider.LISTVIEW_POSITION, position);
         rv.setOnClickFillInIntent(R.id.textView, fillInIntent);
+        rv.setOnClickFillInIntent(R.id.wg_line,fillInIntent);
         return rv;
     }
 

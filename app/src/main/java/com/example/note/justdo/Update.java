@@ -25,7 +25,7 @@ public class Update {
         // -----可以添加空白事项---2018.11.07
         // 可以添加过去时间事项
         // 从地图返回时打开软键盘
-        // widget点击动画bug--listview的iten边缘点击识别
+        // -----widget点击动画bug--listview的iten边缘点击识别---2018.11.09
         // -----widget可以显示已完成事项---201.11.08
         // 直接点击返回闪退
         // 在关闭应用后widget报错----数据库无法获取数据---widgetservice 被删除
