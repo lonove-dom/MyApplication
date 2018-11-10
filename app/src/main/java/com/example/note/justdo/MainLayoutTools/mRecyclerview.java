@@ -26,6 +26,16 @@ public class mRecyclerview extends RecyclerView{
     Boolean IsDrag=false;
     Boolean IsSwipe=false;
     Boolean IsRightSlip=false;
+
+    public String getSTATE() {
+        return STATE;
+    }
+
+    public void setSTATE(String STATE) {
+        this.STATE = STATE;
+    }
+
+    String STATE;
     public mRecyclerview(Context context) {
         super(context);
     }
@@ -128,12 +138,22 @@ public class mRecyclerview extends RecyclerView{
 //                }
              if(!IsSwipe&&(!canScrollVertically(-1))&&dy>2&&(!IsDrag)){
                  e.setAction(MotionEvent.ACTION_DOWN);
-                 Log.d("TAG","DISPATCH");
+                 setSTATE("PULLDOWN");
+                 Log.d("TAG","DOWNDISPATCH");
                  cancalintercept=true;
                 dispatchTouchEvent(e);
                  lastY=0;
                  return false;
              }
+                if(!IsSwipe&&(!canScrollVertically(1))&&dy<-2&&(!IsDrag)){
+                    e.setAction(MotionEvent.ACTION_DOWN);
+                    setSTATE("PULLUP");
+                    Log.d("TAG","UPDISPATCH");
+                    cancalintercept=true;
+                    dispatchTouchEvent(e);
+                    lastY=0;
+                    return false;
+                }
         }
         return super.onTouchEvent(e);
     }

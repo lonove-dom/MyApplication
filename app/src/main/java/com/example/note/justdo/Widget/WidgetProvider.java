@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -204,7 +203,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 String content=newEditText.getText().toString();
                 addEvent(content,context);
                 dialog.dismiss();
-
             }
         });
     }

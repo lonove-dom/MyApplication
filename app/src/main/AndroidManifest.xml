@@ -56,6 +56,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTop"
             />
         <activity
             android:name="com.example.note.justdo.TActivity"
@@ -73,7 +74,10 @@
             android:name="com.example.note.justdo.Widget.Widget_dialog"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/translucent">
+            android:theme="@style/translucent"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
             <!--android:process="com.example.note.justdo.Widget.Widget_dialog">-->
             ></activity>
         <!--MyRemoteService-->

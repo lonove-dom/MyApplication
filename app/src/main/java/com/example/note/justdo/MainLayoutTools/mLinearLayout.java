@@ -40,8 +40,10 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
     private AppCompatActivity appcomp;
     private boolean iseditShow;//删除组件是否显示
     private boolean allowintercept = true;
-    private int mEditHeight = (int) dp2px(60);//编辑组件的宽度
+    private int mEditHeight; //编辑组件的宽度
+    private int msetlayoutHeight=(int)dp2px(180); //设置跳转组件的宽度
     private LinearLayout.LayoutParams editLayoutParams;//edittext的布局参数
+    private LinearLayout.LayoutParams settingLayoutParams;//setting的布局参数
     private ConstraintLayout.LayoutParams shadowLayoutParams;//阴影蒙层的布局参数
     private int mDownX;//手指初次按下的X坐标 初始化为0
     private int mDownY;//手指初次按下的Y坐标 初始化为0
@@ -52,10 +54,14 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
      * @params "add" / "change"/"normal"
      */
     private String flags="normal"; //默认为主界面状态
+    private String State=null;//上拉/下拉状态标识（PULLUP/PULLDOWN)
+    private final String Upstate="PULLUP";
+    private final String Downstate="PULLDOWN";
 
     //布局内基本控件
     private EditText editText;//嵌套于editll内，两者等大
     private LinearLayout editll;
+    private LinearLayout setting;
     mRecyclerview mlistrecyclerview;
     //用于实现软键盘手动收弹操作
     InputMethodManager im;
@@ -99,9 +105,12 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
         //根据id获取
         editText = view.findViewById(R.id.medittext);
         editll = view.findViewById(R.id.editll);
+        setting=view.findViewById(R.id.setting);
         mlistrecyclerview = findViewById(R.id.mlistrecyclerview);
         //用于调整edittext位置
         editLayoutParams = (LinearLayout.LayoutParams) editll.getLayoutParams();
+        settingLayoutParams=(LinearLayout.LayoutParams) setting.getLayoutParams();
+        Log.d("TAG","bottom="+settingLayoutParams.bottomMargin);
         measureEditHeight();
         editLayoutParams.topMargin=-mEditHeight;
         editll.setLayoutParams(editLayoutParams);
@@ -185,6 +194,9 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
 
         //编辑框出现时调用
         void Onedittextshow();
+
+        //触发向设置界面跳转时调用
+        void Onsettingshow();
     }
 
     /*  @Override
@@ -253,6 +265,7 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
                 //向下嵌套滑动时，直接拦截move事件
                 if(mlistrecyclerview.getCancalintercept()){
                     Log.d("TAG","MOVE MOVE");
+                    State=mlistrecyclerview.getSTATE();
                     processmove=true;//标记拦截了move事件
                     mlistrecyclerview.setCancalintercept(false);//重置参数
                     return true;
@@ -264,7 +277,7 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
                     allowintercept = true;
 
                     //如果recyclerview不在顶端
-                    if (mlistrecyclerview.canScrollVertically(-1)) {
+                    if (mlistrecyclerview.canScrollVertically(1)&&mlistrecyclerview.canScrollVertically(-1)) {
                         //则不需要拦截
                         allowintercept = false;
                         Log.d("TAG", "=================" + ((LinearLayoutManager) mlistrecyclerview.getLayoutManager()).findFirstVisibleItemPosition());
@@ -291,13 +304,18 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
                         //
 
                         Log.i(TAG, " " + diffY+" mDownY="+mDownY);
-                        //如果标准状态下向上滑，则不用拦截，交由recyclerview处理
-                        if (!iseditShow && diffY<0) {
-                            return false;
+                        Log.i(TAG, "canslideup="+mlistrecyclerview.canScrollVertically(1));
+                        //如果标准状态向上滑且recyclerview已到达底部，则需要拦截
+                        if (Math.abs(diffY) > Math.abs(diffX) && diffY <-2&&!mlistrecyclerview.canScrollVertically(1)) {
+                            processmove=true;//标记拦截成功
+                            Log.i(TAG, "time to setting");
+                            State=Upstate;
+                            return true;
                         }
                         //如果Y方向偏移量大于X方向，且Y偏移量向下超过两个单位，则拦截，进入performmove进行事件处理
-                        else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 2) {
+                        else if (Math.abs(diffY) > Math.abs(diffX) && diffY > 2&&!mlistrecyclerview.canScrollVertically(-1)) {
                             processmove=true;//标记拦截成功
+                            State=Downstate;
                             Log.i(TAG, "time to add");
                             return true;//避免子布局中有点击的控件时滑动无效
                         }
@@ -367,36 +385,62 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
             int dy=nowY-lastY;
             lastY=nowY;
             Log.d("TAG","dy=="+dy);
+if(State.equals(Downstate)) {
+    //（在move事件被mLinearLayout拦截时）如果需要向上嵌套滑动
+    // 则重新分发down事件，使得recyclerview捕获上滑move
+    if (processmove && dy < 0 && (editLayoutParams.topMargin == -mEditHeight)) {
+        Log.d("TAG", "SUCCESS");
+        ev.setAction(MotionEvent.ACTION_DOWN);
+        lastY = 0;
+        cancalintercept = true;
+        processmove = false;
+        dispatchTouchEvent(ev);
+    }
 
-            //（在move事件被mLinearLayout拦截时）如果需要向上嵌套滑动
-            // 则重新分发down事件，使得recyclerview捕获上滑move
-            if(processmove&&dy<0&&(editLayoutParams.topMargin==-mEditHeight)){
-                Log.d("TAG","SUCCESS");
-                ev.setAction(MotionEvent.ACTION_DOWN);
-                lastY=0;
-                cancalintercept=true;
-                processmove=false;
-                dispatchTouchEvent(ev);
-            }
+    if (!iseditShow) {
+        //根据偏移量dy不断改变edittext位置
+        //借助其layoutparams实现
+        editLayoutParams.topMargin = editLayoutParams.topMargin + dy;
 
-            if (!iseditShow) {
-                //根据偏移量dy不断改变edittext位置
-                //借助其layoutparams实现
-               editLayoutParams.topMargin=editLayoutParams.topMargin+dy;
+        //最小，最大位置判断处理
+        if (editLayoutParams.topMargin > 0) {
+            editLayoutParams.topMargin = 0;
+        } else if (editLayoutParams.topMargin < -mEditHeight) {
+            editLayoutParams.topMargin = -mEditHeight;
+        }
+        Log.i(TAG, String.valueOf(editLayoutParams.topMargin));
 
-               //最小，最大位置判断处理
-                if(editLayoutParams.topMargin>0){
-                    editLayoutParams.topMargin=0;
-                }
-                else if(editLayoutParams.topMargin<-mEditHeight){
-                    editLayoutParams.topMargin=-mEditHeight;
-                }
-                Log.i(TAG, String.valueOf(editLayoutParams.topMargin));
+        //设置edittext位置
+        editll.setLayoutParams(editLayoutParams);
+        Log.i(TAG, "time to show");
+    }
+}
+else if(State.equals(Upstate)){
+    if (processmove && dy >0 && (editLayoutParams.topMargin == -mEditHeight)) {
+        Log.d("TAG", "SUCCESS");
+        ev.setAction(MotionEvent.ACTION_DOWN);
+        lastY = 0;
+        cancalintercept = true;
+        processmove = false;
+        dispatchTouchEvent(ev);
+    }
+    //根据偏移量dy不断改变edittext位置
+    //借助其layoutparams实现
+    if(dy<0)
+    editLayoutParams.topMargin = editLayoutParams.topMargin + (1-(-mEditHeight-editLayoutParams.topMargin)/msetlayoutHeight)*dy;
+    else
+        editLayoutParams.topMargin = editLayoutParams.topMargin + dy;
+    //最小，最大位置判断处理
+    if (editLayoutParams.topMargin > -mEditHeight) {
+        editLayoutParams.topMargin = -mEditHeight;
+    } else if (editLayoutParams.topMargin < -mEditHeight-msetlayoutHeight) {
+        editLayoutParams.topMargin = -mEditHeight-msetlayoutHeight;
+    }
+    Log.i(TAG, "topmargin"+editLayoutParams.topMargin);
 
-                //设置edittext位置
-                editll.setLayoutParams(editLayoutParams);
-                Log.i(TAG, "time to show");
-            }
+    //设置edittext位置
+    editll.setLayoutParams(editLayoutParams);
+}
         }
         //return whatever
         return true;
@@ -404,40 +448,56 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
 
     //手势完成时，根据edittext的位置决定是否进入添加状态，或是恢复标准状态
     private void performActionUp(MotionEvent ev) {
-        //规定界限为1/3 edittext高度
-        if (editLayoutParams.topMargin >= (-mEditHeight *1/ 3)) {
-            //开始edittext显示动画，目的是使画面看起来更连贯
-            upshowedit(editLayoutParams.topMargin);
+        if(!(State==null)) {
+            if (State.equals(Downstate)) {
+                //规定界限为1/3 edittext高度
+                if (editLayoutParams.topMargin >= (-mEditHeight / 3)) {
+                    //开始edittext显示动画，目的是使画面看起来更连贯
+                    upshowedit(editLayoutParams.topMargin);
 
-            //作edittext默认文字及字体改变（从“下拉添加...”变为“Do...”）
-            editText.setHintTextColor(Color.parseColor("#808080"));
-            editText.setHint("Do...");
-            //显示光标
-            editText.setCursorVisible(true);
-            //标记已显示
-            iseditShow = true;
-            //标记正在添加
-            if(!flags.equals("add")){
-            flags="add";}
-            //弹出软键盘
-            ((InputMethodManager) cont.getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(editText, 0);
+                    //作edittext默认文字及字体改变（从“下拉添加...”变为“Do...”）
+                    editText.setHintTextColor(Color.parseColor("#808080"));
+                    editText.setHint("Do...");
+                    //显示光标
+                    editText.setCursorVisible(true);
+                    //标记已显示
+                    iseditShow = true;
+                    //标记正在添加
+                    if (!flags.equals("add")) {
+                        flags = "add";
+                    }
+                    //弹出软键盘
+                    ((InputMethodManager) cont.getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(editText, 0);
 
-            //回调方法，由于需要根据软键盘高度计算timebutton的位置，延迟显示timebutton
-            meditOnActionListener.Onedittextshow();
-            //显示阴影蒙层
-            Listturnshadow();
-           // shadowview.setVisibility(VISIBLE);
-            Log.i(TAG, "time to fill");
-        } else {//否则恢复原状
-            upturnNormal(editLayoutParams.topMargin);
-            Log.i(TAG, "time to hide===");
+                    //回调方法，由于需要根据软键盘高度计算timebutton的位置，延迟显示timebutton
+                    meditOnActionListener.Onedittextshow();
+                    //显示阴影蒙层
+                    Listturnshadow();
+                    // shadowview.setVisibility(VISIBLE);
+                    Log.i(TAG, "time to fill");
+                } else {//否则恢复原状
+                    upturnNormal(editLayoutParams.topMargin);
+                    Log.i(TAG, "time to hide===");
+                }
+            } else if (State.equals(Upstate)) {
+                if (editLayoutParams.topMargin <= (-mEditHeight -msetlayoutHeight*4/5)) {
+                    editLayoutParams.topMargin = -mEditHeight;
+                    editll.setLayoutParams(editLayoutParams);
+                    meditOnActionListener.Onsettingshow();
+                    Log.d("TAG", "settingshow");
+                } else {
+                    downturnNormal(editLayoutParams.topMargin);
+                    Log.d("TAG", "settingfalse");
+                }
+            }
+
+            //初始化用到的参数
+            State = null;
+            mDownY = 0;
+            lastY = 0;
+            processmove = false;
+            allowchange = false;
         }
-
-        //初始化用到的参数
-        mDownY=0;
-        lastY=0;
-        processmove=false;
-        allowchange=false;
     }
 
     /**
@@ -471,6 +531,19 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
         textbtn.setVisibility(View.INVISIBLE);
         placebtn.setVisibility(View.INVISIBLE);
 
+    }
+    private void downturnNormal(final  int currenttopmargin){
+        upanim.removeAllUpdateListeners();//先取消之前的监听
+        upanim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                //向上逐渐消失
+                float fraction=animation.getAnimatedFraction();
+                editLayoutParams.topMargin=(int)(currenttopmargin+(-mEditHeight-currenttopmargin)*fraction);
+                editll.setLayoutParams(editLayoutParams);
+            }
+        });
+        upanim.start();
     }
     public void editTurnChange(){
         if(!flags.equals("change")){

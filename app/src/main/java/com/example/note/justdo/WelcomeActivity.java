@@ -5,17 +5,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
+import android.view.View;
 
 import com.hanks.htextview.scale.ScaleTextView;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends Activity implements View.OnClickListener{
     private ScaleTextView textView;
-
+    private ConstraintLayout constraintLayout;
+   // private boolean isFinished=false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.animation_start);
         textView = findViewById(R.id.less);
+        constraintLayout=findViewById(R.id.constrainLayout);
+        textView.setOnClickListener(this);
+        constraintLayout.setOnClickListener(this);
         SharedPreferences sp = getSharedPreferences("firstIn", MODE_PRIVATE);
         final SharedPreferences.Editor editor = sp.edit();
 
@@ -50,9 +56,11 @@ public class WelcomeActivity extends Activity {
             //延迟中执行的操作放在这里,跳转之后及时销毁
             @Override
             public void run() {
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+              //  if(!isFinished) {
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+           //     }
             }
         }, 4000);
         if (isFirst) {
@@ -75,5 +83,15 @@ public class WelcomeActivity extends Activity {
             Event eighthevent = new Event(1, "JUSD DO让你的生活简单起来");
             ((App) getApplication()).getEventdaomanger().insertevent(eighthevent);
         }
+
     }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        //onDestroy();
+    }
+
 }

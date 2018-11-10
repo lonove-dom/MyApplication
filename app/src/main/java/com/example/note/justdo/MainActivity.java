@@ -38,11 +38,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.model.LatLng;
 import com.example.note.justdo.Amap.NewMap;
 import com.example.note.justdo.MainLayoutTools.listrecyclerAdapter;
 import com.example.note.justdo.MainLayoutTools.mLinearLayout;
@@ -116,6 +115,10 @@ public class MainActivity extends AppCompatActivity  {
     private static final String TAG = "TestSensorActivity";
     private static final int SENSOR_SHAKE = 10;
     long time = System.currentTimeMillis();
+
+    //setting
+
+    private ImageView setting;
 
 
 
@@ -244,12 +247,21 @@ public class MainActivity extends AppCompatActivity  {
                     }
                 },200);
             }
+
+            @Override
+            public void Onsettingshow() {
+                startActivity(new Intent(MainActivity.this,settingsActivity.class));
+            }
         });
 
         //摇一摇
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+
+        //setting
+
+        setting=findViewById(R.id.settings);
     }
 
     @Override
@@ -281,6 +293,7 @@ public class MainActivity extends AppCompatActivity  {
                 WidgetProvider.class);
         mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn),
                 R.id.wg_listview);
+      //  mgr.updateAppWidget();
         super.onPause();
         if (sensorManager != null) {// 取消监听器
             sensorManager.unregisterListener(sensorEventListener);
@@ -290,6 +303,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         String flags=mLinearLayout.getFlags();
+        if(myTimeWindow!=null){
         if(myTimeWindow.isShowing()){
             timeset=true;//标记进行了时间设置
             initStartTime();
@@ -299,7 +313,8 @@ public class MainActivity extends AppCompatActivity  {
             timebtn.setVisibility(View.VISIBLE);//时间提醒按钮重新显示
             placebtn.setVisibility(View.VISIBLE);
             return;
-        }
+        }}
+
         switch (flags) {
             case "add":onaddfinished();
                 break;
@@ -1037,7 +1052,7 @@ public class MainActivity extends AppCompatActivity  {
                 Log.i(TAG, "检测到摇晃，执行操作！"); //    通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                 AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this);
                 //    设置Title的内容
-                builder.setTitle("设置位置提醒");
+                //builder.setTitle("设置位置提醒");
                 //    设置Content来显示一个信息
 
                     builder.setMessage("您确定要删除所有已完成事项吗？" );
