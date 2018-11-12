@@ -165,7 +165,7 @@ public class TimeJob extends Job {
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), Channelid)
                 .setSmallIcon(R.drawable.icon2)
-                .setContentTitle("just do 0.8")
+                .setContentTitle("just do")
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentText(content)
                 .setAutoCancel(true)

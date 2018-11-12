@@ -37,7 +37,7 @@ public class Widget_dialog extends Activity {
                         WidgetProvider.class);
                 mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn),
                         R.id.wg_listview);
-                onDestroy();
+                finish();
             }
         });
 

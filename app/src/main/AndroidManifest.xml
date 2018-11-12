@@ -31,8 +31,9 @@
         <service android:name="com.amap.api.location.APSService"/>
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="90df0c765aea761fa85a8cbac73be4f7" />
-
+            android:value="37b968460b9a024e66d094b9b917d769"
+            />
+        <!--90df0c765aea761fa85a8cbac73be4f7-->
         <activity
             android:name="com.example.note.justdo.WelcomeActivity"
             android:theme="@style/AppTheme"

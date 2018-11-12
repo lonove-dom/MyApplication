@@ -116,9 +116,8 @@ public class MainActivity extends AppCompatActivity  {
     private static final int SENSOR_SHAKE = 10;
     long time = System.currentTimeMillis();
 
-    //setting
+    // 位置监听
 
-    private ImageView setting;
 
 
 
@@ -258,10 +257,6 @@ public class MainActivity extends AppCompatActivity  {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-
-        //setting
-
-        setting=findViewById(R.id.settings);
     }
 
     @Override
