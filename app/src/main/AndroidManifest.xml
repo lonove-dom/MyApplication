@@ -87,6 +87,9 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS">
         </service>
+        <service
+            android:name=".PlaceReminder.PlaceService">
+        </service>
         <receiver android:name=".Widget.WidgetProvider">
             ...
             <meta-data
