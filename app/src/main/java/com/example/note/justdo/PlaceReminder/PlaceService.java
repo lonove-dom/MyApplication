@@ -41,6 +41,6 @@ public class PlaceService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    //创建服务时调用
+    //创建服务时调用1
 
 }
