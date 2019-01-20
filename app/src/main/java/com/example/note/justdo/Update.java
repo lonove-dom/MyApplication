@@ -65,11 +65,16 @@ public class Update {
         // 提醒的显示样式--同对话框样式，使用弹出activity
         // 撤销删除使用 snackbars
         // 时间选择的控件 ui
+        // service里设置循环获取对象
 
     }
 
     public void remember(){
         // 图标版权：<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         // 地图版权
+        // 目前手机设备在长时间黑屏或锁屏时CPU会休眠，这导致定位SDK不能正常进行位置更新。若您有锁屏状态下获取位置的需求，您可以应用alarmManager实现1个可叫醒CPU的Timer，定时请求定位。
+        //● 使用定位SDK务必要注册GPS和网络的使用权限。
+        //● 在使用定位SDK时，请尽量保证网络畅通，如获取网络定位，地址信息等都需要设备可以正常接入网络。
+        //● 定位SDK在国内返回高德类型坐标，海外定位将返回GPS坐标。
     }
 }
