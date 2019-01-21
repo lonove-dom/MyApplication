@@ -38,7 +38,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -46,6 +45,7 @@ import com.example.note.justdo.Amap.NewMap;
 import com.example.note.justdo.MainLayoutTools.listrecyclerAdapter;
 import com.example.note.justdo.MainLayoutTools.mLinearLayout;
 import com.example.note.justdo.MainLayoutTools.mRecyclerview;
+import com.example.note.justdo.PlaceReminder.PlaceService;
 import com.example.note.justdo.TimeReminder.MyTimeWindow;
 import com.example.note.justdo.TimeReminder.TimeManger;
 import com.example.note.justdo.Widget.WidgetProvider;
@@ -356,6 +356,13 @@ public class MainActivity extends AppCompatActivity  {
               newev.setLatitude(getApp().getLatlng().latitude);
               newev.setLongitude(getApp().getLatlng().longitude);
               getApp().setRadius(0);
+                Intent serviceIntent=new Intent(MainActivity.this,PlaceService.class);
+                serviceIntent.putExtra("Latitude",getApp().getLatlng().latitude);
+                serviceIntent.putExtra("Longitude",getApp().getLatlng().longitude);
+                serviceIntent.putExtra("Raduis",getApp().getRadius());
+                serviceIntent.putExtra("content",addedit.getText().toString());
+                startService(serviceIntent);
+                getApp().setRadius(0);
             }
             //时间提醒设置
              if (Cstartmills > 0) {
