@@ -5,6 +5,10 @@ public class PlaceRemind {
     public double longtitude;
     public double radius;
     public String content;
+    int isfinish=0;
+    // 0 为初始状态
+    // 1 为在圈内
+    // 2 为在圈外
 
     public PlaceRemind(double latitude,double longtitude,double radius,String content){
         this.latitude=latitude;
@@ -36,9 +40,18 @@ public class PlaceRemind {
         double var28 = Math.sqrt((var26[0] - var27[0]) * (var26[0] - var27[0]) + (var26[1] - var27[1]) * (var26[1] - var27[1]) + (var26[2] - var27[2]) * (var26[2] - var27[2]));
         return (float)(Math.asin(var28 / 2.0D) * 1.27420015798544E7D);
     }
-    public void isfinish(double nlatitude,double nlongtitude,){
+    public void isfinish(double nlatitude,double nlongtitude){
         float distance=distance(nlatitude,nlongtitude);
-
+        if(isfinish==0) {
+            if (distance <= radius) {
+                isfinish = 1;
+            } else {
+                isfinish = 2;
+            }
+        }
+        else if((isfinish==1&&distance>=radius)||(isfinish==2&&distance<=radius)){
+//发出通知
+            }
 
     }
 }
