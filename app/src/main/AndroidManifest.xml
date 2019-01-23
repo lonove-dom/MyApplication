@@ -31,7 +31,7 @@
         <service android:name="com.amap.api.location.APSService"/>
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="37b968460b9a024e66d094b9b917d769"
+            android:value="90df0c765aea761fa85a8cbac73be4f7"
             />
         <!--90df0c765aea761fa85a8cbac73be4f7-->
         <activity
@@ -73,6 +73,16 @@
             ></activity>
         <activity
             android:name="com.example.note.justdo.Widget.Widget_dialog"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/translucent"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
+            <!--android:process="com.example.note.justdo.Widget.Widget_dialog">-->
+            ></activity>
+        <activity
+            android:name="com.example.note.justdo.PlaceReminder.PlaceDialog"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
             android:theme="@style/translucent"

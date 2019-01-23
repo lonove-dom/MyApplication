@@ -6,6 +6,7 @@ public class PlaceRemind {
     public double radius;
     public String content;
     int isfinish=0;
+    boolean isRight=true;
     // 0 为初始状态
     // 1 为在圈内
     // 2 为在圈外
@@ -49,8 +50,13 @@ public class PlaceRemind {
                 isfinish = 2;
             }
         }
-        else if((isfinish==1&&distance>=radius)||(isfinish==2&&distance<=radius)){
-//发出通知
+        else if((isfinish==1&&distance>=radius)) {
+            isfinish=2;
+            isRight=false;
+        }
+        else if((isfinish==2&&distance<=radius)){
+            isfinish=1;
+            isRight=false;
             }
 
     }
