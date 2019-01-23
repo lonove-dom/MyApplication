@@ -12,6 +12,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class PlaceService extends Service implements AMapLocationListener {
     //public AMapLocationListener mLocationListener = new AMapLocationListener();
     //AMapLocation amapLocation=null;
     PlaceRemind placeRemind=null;
-    List<PlaceRemind> data;
+    List<PlaceRemind> data=new ArrayList<PlaceRemind>();
 
     @Override
     //创建服务时
