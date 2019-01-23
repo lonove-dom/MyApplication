@@ -206,15 +206,16 @@ public class MainActivity extends AppCompatActivity  {
             }
 
             @Override
+            //多列表
             public void OnactivityChanged() {//跳转到主列表时
-                bitmap = getfinalBitmap(getApplicationContext(), listrecyclerview);//获取当前屏幕截图
-                getApp().setViewbackground(bitmap);//借助Application暂存背景数据
-                setvoidBitmap(MainActivity.this);//暂存默认带边框背景
-               // constraintLayout.setTransitionName(Integer.toString(listid));
-               // startActivity(new Intent(MainActivity.this, TActivity.class), ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, constraintLayout, Integer.toString(listid)).toBundle());
-                startActivity(new Intent(MainActivity.this,TActivity.class));
-                finish();
-                overridePendingTransition(R.anim.tactivity_enter_anim,R.anim.mainactivity_miss_anim);
+//                bitmap = getfinalBitmap(getApplicationContext(), listrecyclerview);//获取当前屏幕截图
+//                getApp().setViewbackground(bitmap);//借助Application暂存背景数据
+//                setvoidBitmap(MainActivity.this);//暂存默认带边框背景
+//               // constraintLayout.setTransitionName(Integer.toString(listid));
+//               // startActivity(new Intent(MainActivity.this, TActivity.class), ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, constraintLayout, Integer.toString(listid)).toBundle());
+//                startActivity(new Intent(MainActivity.this,TActivity.class));
+//                finish();
+//                overridePendingTransition(R.anim.tactivity_enter_anim,R.anim.mainactivity_miss_anim);
             }
 
             @Override

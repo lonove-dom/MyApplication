@@ -64,7 +64,9 @@ public class PlaceService extends Service implements AMapLocationListener {
             data.add(placeRemind);
      //   PlaceRemind placeRemind=new PlaceRemind(intent.getDoubleExtra("latitude",0),intent.getDoubleExtra("longtitude",0),intent.getDoubleExtra("radius",0),intent.getStringExtra("content"));
         Log.d(TAG, "onStartCommand");
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
+//重传Intent。使用这个返回值时，如果在执行完onStartCommand后，服务被异常kill掉，系统会自动重启该服务，并将Intent的值传入。
+       // return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
