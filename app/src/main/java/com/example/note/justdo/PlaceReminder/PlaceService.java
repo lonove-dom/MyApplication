@@ -107,6 +107,9 @@ public class PlaceService extends Service implements AMapLocationListener {
                             startActivity(intent);
                         }
                     }
+                    if(data.size()==0){
+                        stopSelf(); //自杀服务
+                    }
                 }
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

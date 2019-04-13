@@ -16,9 +16,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -126,6 +129,10 @@ public class MainActivity extends AppCompatActivity  {
       //  getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        //检测是否具有通知权限
+//        if(!isNotificationListenerEnabled()){
+//          settingNotification();
+//        }
         timeManger=new TimeManger();//时间提醒管理类
         //用于获取软键盘高度的监听
         setEditkeybroadListener(getWindow().getDecorView());
@@ -206,7 +213,7 @@ public class MainActivity extends AppCompatActivity  {
             }
 
             @Override
-            //多列表
+            //多列表l
             public void OnactivityChanged() {//跳转到主列表时
 //                bitmap = getfinalBitmap(getApplicationContext(), listrecyclerview);//获取当前屏幕截图
 //                getApp().setViewbackground(bitmap);//借助Application暂存背景数据
@@ -258,6 +265,37 @@ public class MainActivity extends AppCompatActivity  {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+    }
+
+    /**
+     * 跳到通知栏设置界面
+     * @param
+     */
+    private void settingNotification() {
+
+        Intent localIntent = new Intent();
+        //直接跳转到应用通知设置的代码：
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            localIntent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            localIntent.putExtra("app_package", getPackageName());
+            localIntent.putExtra("app_uid", getApplicationInfo().uid);
+        } else if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            localIntent.setData(Uri.parse("package:" + getPackageName()));
+        } else {
+            //4.4以下没有从app跳转到应用通知设置页面的Action，可考虑跳转到应用详情页面,
+            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 9) {
+                localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+            } else if (Build.VERSION.SDK_INT <= 8) {
+                localIntent.setAction(Intent.ACTION_VIEW);
+                localIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+                localIntent.putExtra("com.android.settings.ApplicationPkgName",getPackageName());
+            }
+        }
+        startActivity(localIntent);
     }
 
     @Override
@@ -1091,6 +1129,33 @@ public class MainActivity extends AppCompatActivity  {
         }
     };
 
+//    /**
+//     * 获取是否具有通知权限
+//     * @return
+//     */
+//    public boolean isNotificationListenerEnabled() {
+//        try {
+//            String packageName = getApplication().getPackageName();
+//            String str1 = Settings.Secure.getString(getContentResolver()
+//                    ,"enabled_notification_listeners");
+//            if (!TextUtils.isEmpty(str1)) {
+//                String[] strings = str1.split(":");
+//                for (String string : strings) {
+//                    ComponentName localComponentName
+//                            = ComponentName.unflattenFromString(string);
+//                    if ((localComponentName == null)
+//                            || (!TextUtils.equals(packageName,localComponentName.getPackageName()))) {
+//                       // LogUtils.instance().d(TAG,localComponentName.getPackageName());
+//                    } else {
+//                        return true;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 }
 //           // Log.i(TAG, "x轴方向的重力加速度" + x + "；y轴方向的重力加速度" + y + "；z轴方向的重力加速度" + z);
 //            // 一般在这三个方向的重力加速度达到40就达到了摇晃手机的状态。

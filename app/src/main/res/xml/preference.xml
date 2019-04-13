@@ -8,8 +8,8 @@
         >
         <SwitchPreference
             android:key="key_cloud"
-            android:title="多设备同步"
-            android:enabled="false"/>
+            android:title="摇一摇删除"
+            android:enabled="true"/>
         <ListPreference
             android:key="key_textSize"
             android:title="@string/key_choose_textsize"

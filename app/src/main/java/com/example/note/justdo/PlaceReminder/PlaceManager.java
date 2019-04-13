@@ -49,6 +49,38 @@ public class PlaceManager extends Activity {
     }
 
     /**
+     * Android6.0申请权限的回调方法
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            // requestCode即所声明的权限获取码，在checkSelfPermission时传入
+            case BAIDU_READ_PHONE_STATE:
+                //如果用户取消，permissions可能为null.
+                if (grantResults[0] == PERMISSION_GRANTED && grantResults.length > 0) {  //有权限
+                    // 获取到权限，作相应处理
+                    getLocation();
+                } else {
+                    showGPSContacts();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PRIVATE_CODE:
+                showGPSContacts();
+                break;
+
+        }
+    }
+
+    /**
      * 获取具体位置的经纬度
      */
     private void getLocation() {
@@ -92,35 +124,5 @@ public class PlaceManager extends Activity {
           //  LogUtil.e("无法获取到位置信息");
         }
     }
-    /**
-     * Android6.0申请权限的回调方法
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            // requestCode即所声明的权限获取码，在checkSelfPermission时传入
-            case BAIDU_READ_PHONE_STATE:
-                //如果用户取消，permissions可能为null.
-                if (grantResults[0] == PERMISSION_GRANTED && grantResults.length > 0) {  //有权限
-                    // 获取到权限，作相应处理
-                    getLocation();
-                } else {
-                    showGPSContacts();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PRIVATE_CODE:
-                showGPSContacts();
-                break;
 
-        }
-    }
 }

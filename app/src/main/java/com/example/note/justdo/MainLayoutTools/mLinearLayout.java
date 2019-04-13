@@ -322,25 +322,25 @@ public class mLinearLayout extends LinearLayout implements NestedScrollingParent
                     }
                 }
 
-                //否则为双指触屏时的处理
-                else{
-                    //分别获取双指触摸点坐标，计算差值
-                    mNowX0=(int)ev.getX(0);
-                    mNowX1=(int)ev.getX(1);
-                    mNowY0=(int)ev.getY(0);
-                    mNowY1=(int)ev.getY(1);
-                    int diffX0=Math.abs(mDownX0-mDownX1);
-                    int diffX1=Math.abs(mNowX0-mNowX1);
-                    int diffY0=Math.abs(mDownY0-mDownY1);
-                    int diffY1=Math.abs(mNowY0-mNowY1);
-
-                    //若在X方向或Y方向向内滑动超过5个单位，则拦截，准备activity跳转
-                    if((diffX0-diffX1>5)||(diffY0-diffY1>5)){
-                        //向内移动一段距离，触发向主列表跳转
-                        meditOnActionListener.OnactivityChanged();//回调接口
-                        return true;
-                    }
-                }
+//                //否则为双指触屏时的处理
+//                else{
+//                    //分别获取双指触摸点坐标，计算差值
+//                    mNowX0=(int)ev.getX(0);
+//                    mNowX1=(int)ev.getX(1);
+//                    mNowY0=(int)ev.getY(0);
+//                    mNowY1=(int)ev.getY(1);
+//                    int diffX0=Math.abs(mDownX0-mDownX1);
+//                    int diffX1=Math.abs(mNowX0-mNowX1);
+//                    int diffY0=Math.abs(mDownY0-mDownY1);
+//                    int diffY1=Math.abs(mNowY0-mNowY1);
+//
+//                    //若在X方向或Y方向向内滑动超过5个单位，则拦截，准备activity跳转
+//                    if((diffX0-diffX1>5)||(diffY0-diffY1>5)){
+//                        //向内移动一段距离，触发向主列表跳转
+//                        meditOnActionListener.OnactivityChanged();//回调接口
+//                        return true;
+//                    }
+//                }
 
                 break;
         }
