@@ -786,7 +786,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
 //        }
 //    }
     private void requestPosition() {
-        if (PermissionsUtil.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (PermissionsUtil.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)&&PermissionsUtil.hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             //是否有位置权限
         } else {
             PermissionsUtil.requestPermission(this, new PermissionListener() {
@@ -794,7 +794,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
                 public void permissionGranted(@NonNull String[] permissions) {
 
                     Toast.makeText(NewMap.this, "已获取位置权限", Toast.LENGTH_LONG).show();
-                    onCreate(null);
+                   // onCreate(null);
                 }
 
                 @Override
@@ -802,7 +802,8 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
                     Toast.makeText(NewMap.this, "未获取位置权限", Toast.LENGTH_LONG).show();
                     onBackPressed();
                 }
-            }, Manifest.permission.ACCESS_COARSE_LOCATION);
+            }, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION);
+
         }
     }
 }

@@ -7,8 +7,16 @@
         android:title="主要设置"
         >
         <SwitchPreference
-            android:key="key_cloud"
+            android:key="key_delete"
             android:title="摇一摇删除"
+            android:enabled="true"/>
+        <SwitchPreference
+            android:key="key_location"
+            android:title="地点提醒"
+            android:enabled="true"/>
+        <SwitchPreference
+            android:key="key_time"
+            android:title="时间提醒"
             android:enabled="true"/>
         <ListPreference
             android:key="key_textSize"

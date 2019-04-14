@@ -78,7 +78,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener{
             ((App) getApplication()).getEventdaomanger().insertevent(seventhevent);
             Event sixevent = new Event(1, "摇一摇删除所有已完成事项");
             ((App) getApplication()).getEventdaomanger().insertevent(sixevent);
-            Event fifthevent = new Event(1, "上拉打开菜单（未完成）");
+            Event fifthevent = new Event(1, "上拉打开菜单");
             ((App) getApplication()).getEventdaomanger().insertevent(fifthevent);
             Event eighthevent = new Event(1, "JUSD DO让你的生活简单起来");
             ((App) getApplication()).getEventdaomanger().insertevent(eighthevent);

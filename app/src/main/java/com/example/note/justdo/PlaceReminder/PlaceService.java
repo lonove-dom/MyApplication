@@ -101,7 +101,8 @@ public class PlaceService extends Service implements AMapLocationListener {
                 else{
                     for(int i=0;i<=data.size();i++){
                         data.get(i).isfinish(amapLocation.getLatitude(),amapLocation.getLongitude());
-                        if(!data.get(i).isRight){
+                        if(true){
+                            //!data.get(i).isRight
                             data.remove(i);
                             Intent intent=new Intent(this,PlaceDialog.class);
                             startActivity(intent);
