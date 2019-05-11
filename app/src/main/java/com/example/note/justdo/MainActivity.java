@@ -401,6 +401,7 @@ public class MainActivity extends AppCompatActivity  {
                 serviceIntent.putExtra("Raduis",getApp().getRadius());
                 serviceIntent.putExtra("content",addedit.getText().toString());
                 startService(serviceIntent);
+                Log.d("TAG", "maain start placeservice" );
                 getApp().setRadius(0);
             }
             //时间提醒设置

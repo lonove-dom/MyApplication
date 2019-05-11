@@ -1,15 +1,26 @@
 package com.example.note.justdo.PlaceReminder;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.example.note.justdo.MainActivity;
+import com.example.note.justdo.R;
+import com.example.note.justdo.TimeReminder.TimeJob;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,10 +38,14 @@ public class PlaceService extends Service implements AMapLocationListener {
     PlaceRemind placeRemind=null;
     List<PlaceRemind> data=new ArrayList<PlaceRemind>();
 
+    double latitude;
+    double longtitude;
+
     @Override
     //创建服务时
     public void onCreate() {
-
+        TimeJob TimeJob=new TimeJob();
+        Log.d("TAG", "placeService onCreat" );
         mlocationClient = new AMapLocationClient(getApplicationContext());
 //初始化定位参数
         mLocationOption = new AMapLocationClientOption();
@@ -83,29 +98,73 @@ public class PlaceService extends Service implements AMapLocationListener {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
         if (amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 //定位成功回调信息，设置相关消息
                 amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
-                double latitude=amapLocation.getLatitude();//获取纬度
-                amapLocation.getLongitude();//获取经度
+//                latitude=amapLocation.getLatitude();//获取纬度
+//                longtitude=amapLocation.getLongitude();//获取经度
                 amapLocation.getAccuracy();//获取精度信息
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date(amapLocation.getTime());
                 df.format(date);//定位时间
+
+                Log.d("TAG", "place location changed" );
                 if(data.size()==0){
 
                 }
                 else{
                     for(int i=0;i<=data.size();i++){
+                        Log.d("TAG", "placeremind test1" );
                         data.get(i).isfinish(amapLocation.getLatitude(),amapLocation.getLongitude());
-                        if(true){
+                        if(!data.get(i).isRight){
                             //!data.get(i).isRight
+                            //Intent intent=new Intent(this,PlaceDialog.class);
+                            Log.d("TAG", "placeremind test2" );
+
+                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(PlaceService.this);
+                            NotificationManager mNotificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+                            Notification notification = null;
+                            Intent notificationIntent = new Intent(this, MainActivity.class);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                                    notificationIntent, 0);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                NotificationChannel channel = new NotificationChannel(
+                                        getApplication().getPackageName(),
+                                        TAG,
+                                        NotificationManager.IMPORTANCE_DEFAULT
+
+                                );
+
+                                mNotificationManager.createNotificationChannel(channel);
+
+                            notification = new Notification.Builder(this)
+                                    .setChannelId(getApplication().getPackageName())
+                                    .setContentTitle(data.get(i).content)
+                                    .setContentText("hahaha")
+                                    .setContentIntent(pendingIntent)
+                                    .setSmallIcon(R.drawable.icon2).build();
+                            }
+                            else{
+                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                                        .setContentTitle(data.get(i).content)
+                                        .setContentText("hahaha")
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setOngoing(true);
+                                notification=notificationBuilder.build();
+//                                notification = notificationBuilder.build();
+//                                mBuilder.setChannelId(getApplication().getPackageName());
+//                                mBuilder.setContentText(data.get(i).content);
+//                                mBuilder.setContentIntent(pendingIntent);
+//                                mBuilder.setSmallIcon(R.drawable.icon2);
+//                                mNotificationManager.notify(100, mBuilder.build());mp
+                            }
+                            mNotificationManager.notify(i+100, notification);
                             data.remove(i);
-                            Intent intent=new Intent(this,PlaceDialog.class);
-                            startActivity(intent);
+                            //startActivity(intent);
                         }
                     }
                     if(data.size()==0){
@@ -121,6 +180,4 @@ public class PlaceService extends Service implements AMapLocationListener {
         }
     }
     //创建服务时调用1
-
-
 }

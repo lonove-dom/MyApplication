@@ -28,6 +28,9 @@ import java.util.GregorianCalendar;
 
 public class TimeJob extends Job {
 
+    public void TimeJob(){
+
+    }
     @NonNull
     @Override
     protected Result onRunJob(@NonNull Params params) {
@@ -147,7 +150,7 @@ public class TimeJob extends Job {
         }
         return startmills;
     }
-    private void notify(long id,String content){
+    public void notify(long id, String content){
         NotificationManager notificationManager =(NotificationManager)getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         String Channelid=null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

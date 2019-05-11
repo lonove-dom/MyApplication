@@ -190,6 +190,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
         mKeyWords = "";
         //初始化地图
         map();
+        //DW();
         myApp = (App) this.getApplication();
 
 
@@ -221,7 +222,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
          amap.setMyLocationStyle(myLocationStyle);
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         amap.setMyLocationEnabled(true);
-        myLocationStyle.showMyLocation(false);
+        myLocationStyle.showMyLocation(true);
         //设置是否显示定位小蓝点，用于满足只想使用定位，不想使用定位小蓝点的场景，设置false以后图面上不再有定位蓝点的概念，但是会持续回调位置信息。
 
         //设置是否显示定位小蓝点，用于满足只想使用定位，不想使用定位小蓝点的场景，设置false以后图面上不再有定位蓝点的概念，但是会持续回调位置信息。
@@ -571,23 +572,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
                 // Log.d("TAG","5");
                 break;
             case R.id.DW:
-                //清初所有marker
-                amap.clear();
-                if (circle != null) {
-                    circle = null;
-                }
-                //定义我的位置
-                LatLng mylatlng1 = new LatLng(amap.getMyLocation().getLatitude(), amap.getMyLocation().getLongitude());
-                marker = amap.addMarker(new MarkerOptions().position(mylatlng1).title("我的位置"));
-                //移动到我的位置
-                amap.moveCamera(cameraUpdateFactory.changeLatLng(mylatlng1));
-                //缩放至15
-                amap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                //删除圆
-                if (circle != null) {
-                    circle.remove();
-                }
-                seekBar.setVisibility(View.INVISIBLE);
+                DW();
                 break;
             case R.id.clean_keywords:
                 mKeywordsTextView.setText("");
@@ -596,6 +581,26 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
             default:
                 break;
         }
+    }
+
+    public void DW(){
+        //清初所有marker
+        amap.clear();
+        if (circle != null) {
+            circle = null;
+        }
+        //定义我的位置
+        LatLng mylatlng1 = new LatLng(amap.getMyLocation().getLatitude(), amap.getMyLocation().getLongitude());
+        marker = amap.addMarker(new MarkerOptions().position(mylatlng1).title("我的位置"));
+        //移动到我的位置
+        amap.moveCamera(cameraUpdateFactory.changeLatLng(mylatlng1));
+        //缩放至15
+        amap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        //删除圆
+        if (circle != null) {
+            circle.remove();
+        }
+        seekBar.setVisibility(View.INVISIBLE);
     }
 
 //    @Override
@@ -794,7 +799,7 @@ public class NewMap extends AppCompatActivity implements AMap.OnMyLocationChange
                 public void permissionGranted(@NonNull String[] permissions) {
 
                     Toast.makeText(NewMap.this, "已获取位置权限", Toast.LENGTH_LONG).show();
-                   // onCreate(null);
+                   onCreate(null);
                 }
 
                 @Override
