@@ -121,7 +121,7 @@ public class PlaceService extends Service implements AMapLocationListener {
                             Log.d("TAG", "placeremind test2" +data.get(i).content);
                           // TimeManger.addTimeJob((long)(i+100),data.get(i).content,(new LocalDate().toDateTimeAtStartOfDay().getMillis()),0,0);
                             data.remove(i);
-                            Log.d("TAG", "placeremind test3"+data.get(i).content+"data的size是"+data.size());
+                            Log.d("TAG", "placeremind test3"+data.get(i).content+"data的size是zhe"+data.size());
                             i--;
                            // data.get(i).isRight
 
