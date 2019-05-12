@@ -1,26 +1,18 @@
 package com.example.note.justdo.PlaceReminder;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.example.note.justdo.MainActivity;
-import com.example.note.justdo.R;
-import com.example.note.justdo.TimeReminder.TimeJob;
+import com.example.note.justdo.TimeReminder.TimeManger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +36,7 @@ public class PlaceService extends Service implements AMapLocationListener {
     @Override
     //创建服务时
     public void onCreate() {
-        TimeJob TimeJob=new TimeJob();
+        TimeManger TimeManger=new TimeManger();
         Log.d("TAG", "placeService onCreat" );
         mlocationClient = new AMapLocationClient(getApplicationContext());
 //初始化定位参数
@@ -77,6 +69,7 @@ public class PlaceService extends Service implements AMapLocationListener {
         String content=intent.getStringExtra("content");
             placeRemind = new PlaceRemind(latitude, longtitude, radius, content);
             data.add(placeRemind);
+        Log.d("TAG", "placeremind onstart"+ content+"data的size是"+data.size());
      //   PlaceRemind placeRemind=new PlaceRemind(intent.getDoubleExtra("latitude",0),intent.getDoubleExtra("longtitude",0),intent.getDoubleExtra("radius",0),intent.getStringExtra("content"));
         Log.d(TAG, "onStartCommand");
         return START_REDELIVER_INTENT;
@@ -111,65 +104,73 @@ public class PlaceService extends Service implements AMapLocationListener {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date(amapLocation.getTime());
                 df.format(date);//定位时间
+      //          this.startmills=(new LocalDate(startmills)).toDateTimeAtStartOfDay().getMillis();
 
-                Log.d("TAG", "place location changed" );
+                Log.d("TAG", "place location changed" +"data的size是"+data.size());
                 if(data.size()==0){
-
+                    stopSelf(); //自杀服务
+                    Log.d("TAG", "placeremind isEmpty" );
                 }
                 else{
-                    for(int i=0;i<=data.size();i++){
-                        Log.d("TAG", "placeremind test1" );
+                    for(int i=0;i<data.size();i++){
+                        Log.d("TAG", "placeremind test1"+data.get(i).content+"data的size是"+data.size());
                         data.get(i).isfinish(amapLocation.getLatitude(),amapLocation.getLongitude());
-                        if(!data.get(i).isRight){
+                        if(true){
                             //!data.get(i).isRight
                             //Intent intent=new Intent(this,PlaceDialog.class);
-                            Log.d("TAG", "placeremind test2" );
-
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(PlaceService.this);
-                            NotificationManager mNotificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
-                            Notification notification = null;
-                            Intent notificationIntent = new Intent(this, MainActivity.class);
-                            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                                    notificationIntent, 0);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                NotificationChannel channel = new NotificationChannel(
-                                        getApplication().getPackageName(),
-                                        TAG,
-                                        NotificationManager.IMPORTANCE_DEFAULT
-
-                                );
-
-                                mNotificationManager.createNotificationChannel(channel);
-
-                            notification = new Notification.Builder(this)
-                                    .setChannelId(getApplication().getPackageName())
-                                    .setContentTitle(data.get(i).content)
-                                    .setContentText("hahaha")
-                                    .setContentIntent(pendingIntent)
-                                    .setSmallIcon(R.drawable.icon2).build();
-                            }
-                            else{
-                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                                        .setContentTitle(data.get(i).content)
-                                        .setContentText("hahaha")
-                                        .setSmallIcon(R.mipmap.ic_launcher)
-                                        .setOngoing(true);
-                                notification=notificationBuilder.build();
-//                                notification = notificationBuilder.build();
-//                                mBuilder.setChannelId(getApplication().getPackageName());
-//                                mBuilder.setContentText(data.get(i).content);
-//                                mBuilder.setContentIntent(pendingIntent);
-//                                mBuilder.setSmallIcon(R.drawable.icon2);
-//                                mNotificationManager.notify(100, mBuilder.build());mp
-                            }
-                            mNotificationManager.notify(i+100, notification);
+                            Log.d("TAG", "placeremind test2" +data.get(i).content);
+                          // TimeManger.addTimeJob((long)(i+100),data.get(i).content,(new LocalDate().toDateTimeAtStartOfDay().getMillis()),0,0);
                             data.remove(i);
+                            Log.d("TAG", "placeremind test3"+data.get(i).content+"data的size是"+data.size());
+                            i--;
+                           // data.get(i).isRight
+
+//                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(PlaceService.this);
+//                            NotificationManager mNotificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+//                            Notification notification = null;
+//                            Intent notificationIntent = new Intent(this, MainActivity.class);
+//                            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+//                                    notificationIntent, 0);
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                NotificationChannel channel = new NotificationChannel(
+//                                        getApplication().getPackageName(),
+//                                        TAG,
+//                                        NotificationManager.IMPORTANCE_DEFAULT
+//
+//                                );
+//
+//                                mNotificationManager.createNotificationChannel(channel);
+//
+//                            notification = new Notification.Builder(this)
+//                                    .setChannelId(getApplication().getPackageName())
+//                                    .setContentTitle(data.get(i).content)
+//                                    .setContentText("hahaha")
+//                                    .setContentIntent(pendingIntent)
+//                                    .setSmallIcon(R.drawable.icon2).build();
+//                            }
+//                            else{
+//                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+//                                        .setContentTitle(data.get(i).content)
+//                                        .setContentText("hahaha")
+//                                        .setSmallIcon(R.mipmap.ic_launcher)
+//                                        .setOngoing(true);
+//                                notification=notificationBuilder.build();
+////                                notification = notificationBuilder.build();
+////                                mBuilder.setChannelId(getApplication().getPackageName());
+////                                mBuilder.setContentText(data.get(i).content);
+////                                mBuilder.setContentIntent(pendingIntent);
+////                                mBuilder.setSmallIcon(R.drawable.icon2);
+////                                mNotificationManager.notify(100, mBuilder.build());mp
+//                            }
+//                            mNotificationManager.notify(i+100, notification);
+
                             //startActivity(intent);
                         }
                     }
-                    if(data.size()==0){
-                        stopSelf(); //自杀服务
-                    }
+////                    if(data.size()==0){
+////                        stopSelf(); //自杀服务
+////                        Log.d("TAG", "placeremind killself" );
+//                    }
                 }
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

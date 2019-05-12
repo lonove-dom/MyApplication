@@ -1,7 +1,5 @@
 package com.example.note.justdo.TimeReminder;
 
-import android.util.Log;
-
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
@@ -31,7 +29,7 @@ public class TimeManger {
      * @param interval
      * @param type
      */
-    public void addTimeJob(long id,String content,long startmills,int interval,int type){
+    public static void addTimeJob(long id, String content, long startmills, int interval, int type){
         long currentmills=System.currentTimeMillis();
         PersistableBundleCompat extras = new PersistableBundleCompat();
         extras.putLong("id",id);

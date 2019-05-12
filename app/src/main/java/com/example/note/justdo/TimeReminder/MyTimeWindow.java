@@ -777,7 +777,7 @@ public class MyTimeWindow extends PopupWindow {
     }
    public interface MyTimeWindowButtonlistener{
         //确定按钮点击操作
-         void OnSurebuttonClick(long startmills,int intevel,int Type,int Hour,int Minute,int Second);
+       void OnSurebuttonClick(long startmills,int intevel,int Type,int Hour,int Minute,int Second);
         //取消按钮点击操作
          void OnCancalbuttonClick();
     }
