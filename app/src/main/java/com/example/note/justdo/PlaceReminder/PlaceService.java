@@ -1,17 +1,25 @@
 package com.example.note.justdo.PlaceReminder;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.example.note.justdo.MainActivity;
+import com.example.note.justdo.R;
 import com.example.note.justdo.TimeReminder.TimeManger;
 
 import java.text.SimpleDateFormat;
@@ -91,6 +99,36 @@ public class PlaceService extends Service implements AMapLocationListener {
         return null;
     }
 
+    public void notify(long id, String content){
+        NotificationManager notificationManager =(NotificationManager)getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+        String Channelid=null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Channelid ="PlaceRemindid";
+            String Channelname="Just Do";
+            NotificationChannel channel = new NotificationChannel(Channelid, Channelname, NotificationManager.IMPORTANCE_HIGH);
+            channel.enableLights(false); //是否在桌面icon右上角展示小红点
+            channel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
+            channel.enableVibration(false);
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+            // 设置绕过免打扰模式
+            channel.setBypassDnd(true);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplication(), Channelid)
+                .setSmallIcon(R.drawable.icon2)
+                .setContentTitle("just do")
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setTicker("title")
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(PendingIntent.getActivity(getApplication(), 0, new Intent(getApplication(), MainActivity.class), 0))
+                ;
+        notificationManager.notify((int)id,builder.build());
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
@@ -115,11 +153,12 @@ public class PlaceService extends Service implements AMapLocationListener {
                     for(int i=0;i<data.size();i++){
                         Log.d("TAG", "placeremind test1"+data.get(i).content+"data的size是"+data.size());
                         data.get(i).isfinish(amapLocation.getLatitude(),amapLocation.getLongitude());
-                        if(true){
+                        if(!data.get(i).isRight){
                             //!data.get(i).isRight
                             //Intent intent=new Intent(this,PlaceDialog.class);
                             Log.d("TAG", "placeremind test2" +data.get(i).content);
-                          // TimeManger.addTimeJob((long)(i+100),data.get(i).content,(new LocalDate().toDateTimeAtStartOfDay().getMillis()),0,0);
+                            notify(i+1000,data.get(i).content);
+                          //TimeManger.addTimeJob((long)(i+100),data.get(i).content,System.currentTimeMillis()+10000,0,0);
                             data.remove(i);
                             Log.d("TAG", "placeremind test3"+data.get(i).content+"data的size是zhe"+data.size());
                             i--;
